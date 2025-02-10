@@ -9,7 +9,7 @@ const pieceSize = 30;
 const pieceGap = 5; 
 
 let whiteArray = []; 
-let blackArray = []; 
+let blackArray = [];
 
 let replacementIndex = 0;
 
@@ -48,8 +48,8 @@ function preloadImages(imagesLoaded) {
     const whiteImg = new Image();
     const blackImg = new Image();
 
-    whiteImg.src = '../static/images/whitePc.png';
-    blackImg.src = '../static/images/blackPc.png';
+    whiteImg.src = 'game3-Trlja/static/images/whitePc.png';
+    blackImg.src = 'game3-Trlja/static/images/blackPc.png';
 
     whiteImg.onload = () => {
         pieceImages['white'] = whiteImg;
