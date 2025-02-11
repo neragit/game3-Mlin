@@ -125,7 +125,6 @@ function drawGrid() {
 }
 
 function drawPieces(player) {
-    console.log("Drawing pieces for", player);
     const playerArray = player === "black" ? blackArray : whiteArray;
     const img = pieceImages[player];
     
@@ -164,13 +163,20 @@ function updateCoordinates() {
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
                 if (isPlayer(row, col)) {
-                    console.log("isPlayer:", isPlayer);
+                    console.log(`Checking grid position [${row}, ${col}] for player`);
+
                     const { x, y } = calculateCoordinates(row, col);
+                    console.log("Calculated coordinates: x =", x, "y =", y);
+
                     const indexToUpdate = playerArray.findIndex(piece => piece.x === x && piece.y === y);
+                    console.log("Looking for index where piece.x =", x, "and piece.y =", y);
+                    console.log("Found indexToUpdate:", indexToUpdate);
 
                     if (indexToUpdate !== -1) {
+                        console.log("Updating playerArray at index", indexToUpdate);
                         playerArray[indexToUpdate] = { ...playerArray[indexToUpdate], x, y };
-                        console.log("indexToUpdate:", indexToUpdate);
+                    } else {
+                        console.log("No matching piece found for coordinates", x, y);
                     }
                 }
             }
@@ -179,8 +185,8 @@ function updateCoordinates() {
 
     const widthArray = maxPieces * pieceSize + (8 * pieceGap);
     
-    const startXWhite = centerX - widthArray / 2; // Calculate the starting X for white pieces, centered horizontally
-    const startYWhite = centerY + gridSize / 2 + gridStep; // Calculate the starting Y for white pieces, below the grid
+    const startXWhite = centerX - widthArray / 2;
+    const startYWhite = centerY + gridSize / 2 + gridStep;
     newCoordinates(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap);
 
     const startXBlack = centerX - widthArray / 2;
@@ -193,6 +199,7 @@ function updateCoordinates() {
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
 }
+
 
 
 
