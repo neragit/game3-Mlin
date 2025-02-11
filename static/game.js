@@ -158,11 +158,10 @@ function updateCoordinates() {
             };
         });
     };
-
-    console.log("Maps BEFORE matchGrid");
-    console.log(`${player} Map:`, playerMap);
     
     const matchGrid = (playerArray, playerMap, grid) => {
+        console.log("Maps BEFORE matchGrid");
+        console.log(`${player} Map:`, playerMap);
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
                 const pieceIndex = [...playerMap.values()].findIndex(p => p.row === row && p.col === col);
