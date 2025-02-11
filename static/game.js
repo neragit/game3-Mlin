@@ -136,9 +136,11 @@ function drawPieces(player) {
     });
 
     if (draggedPiece) {
-        ctx.drawImage(img, draggedPiece.x, draggedPiece.y, pieceSize, pieceSize);
+        const whiteImg = pieceImages["white"];
+        ctx.drawImage(whiteImg, draggedPiece.x, draggedPiece.y, pieceSize, pieceSize);
     }
 }
+
 
 
 function redrawBoard() {
