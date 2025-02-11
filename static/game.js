@@ -153,30 +153,27 @@ function updateCoordinates() {
         playerArray.forEach((piece, index) => {
             playerArray[index] = {
                 ...piece, // Keep other properties
-                x: startX + index * (pieceSize + pieceGap), // Calculate the new x position based on index
+                x: startX + index * (pieceSize + pieceGap),
                 y: startY
             };
         });
     };
 
-    const matchGrid = (playerArray, isPlayer, grid) => {
+    const matchGrid = (playerArray, playerMap, grid) => {
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
-                if (isPlayer(row, col)) {
-                    console.log(`Checking grid position [${row}, ${col}] for player`);
+                const pieceIndex = [...playerMap.values()].findIndex(p => p.row === row && p.col === col);
+                
+                if (pieceIndex !== -1) {
+                    const piece = playerArray[pieceIndex];
 
-                    const { x, y } = calculateCoordinates(row, col);
-                    console.log("Calculated coordinates: x =", x, "y =", y);
-
-                    const indexToUpdate = playerArray.findIndex(piece => piece.x === x && piece.y === y);
-                    console.log("Looking for index where piece.x =", x, "and piece.y =", y);
-                    console.log("Found indexToUpdate:", indexToUpdate);
-
-                    if (indexToUpdate !== -1) {
-                        console.log("Updating playerArray at index", indexToUpdate);
-                        playerArray[indexToUpdate] = { ...playerArray[indexToUpdate], x, y };
+                    if (piece.row !== null && piece.col !== null) {
+                        const { x, y } = calculateCoordinates(row, col);
+                        playerArray[pieceIndex] = { ...piece, x, y };
+                        playerMap.set(pieceIndex, { x, y, row, col });
+                        console.log(`Updated piece at index ${pieceIndex} to x: ${x}, y: ${y}`);
                     } else {
-                        console.log("No matching piece found for coordinates", x, y);
+                        console.log(`Row and col are null for piece at index ${pieceIndex}`);
                     }
                 }
             }
@@ -193,15 +190,15 @@ function updateCoordinates() {
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
     newCoordinates(blackArray, startXBlack, startYBlack, pieceSize, pieceGap);
 
-    matchGrid(whiteArray, isWhite, grid);
-    matchGrid(blackArray, isBlack, grid);
+    updateMap('black'); // Update blackArray and blackMap
+    updateMap('white'); // Update whiteArray and whiteMap
+
+    matchGrid(whiteArray, whiteMap, grid);
+    matchGrid(blackArray, blackMap, grid);
 
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
 }
-
-
-
 
 
 function resizeCanvas() {
