@@ -159,59 +159,36 @@ function updateCoordinates() {
         });
     };
     
-    
     const matchGrid = (playerArray, playerMap, grid) => {
-        console.log("Maps BEFORE matchGrid");
-        console.log(playerMap);
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
                 const pieceIndex = [...playerMap.values()].findIndex(p => p.row === row && p.col === col);
-                console.log(`matchGrid searching index ${pieceIndex} for cell [${row}, ${col}]`);
                 
                 if (pieceIndex !== -1) {
-                    console.log(`matchGrid SUCCESS: Found piece at index ${pieceIndex} for cell [${row}, ${col}]`);
                     const piece = playerArray[pieceIndex];
 
                     if (piece.row !== null && piece.col !== null) {
                         const { x, y } = calculateCoordinates(row, col);
-                        console.log(`matchGrid: Calculated coordinates for piece at index ${pieceIndex}: x = ${x}, y = ${y}`);
                         playerArray[pieceIndex] = { ...piece, x, y };
                         playerMap.set(pieceIndex, { x, y, row, col });
-                        console.log(`matchGrid: Updated piece at index ${pieceIndex} to x: ${x}, y: ${y}`);
-                    } else {
-                        console.log(`matchGrid: Row and col are null for piece at index ${pieceIndex}`);
                     }
-                } else {
-                    console.log(`matchGrid: No piece found for cell [${row}, ${col}]`);
                 }
             }
         }
-        console.log("Maps AFTER matchGrid");
-        console.log(playerMap);
     };
 
-    
-    
     const widthArray = maxPieces * pieceSize + (8 * pieceGap);
-    console.log(`updateCoordinates: Calculated widthArray: ${widthArray}`);
     
     const startXWhite = centerX - widthArray / 2;
     const startYWhite = centerY + gridSize / 2 + gridStep;
-    console.log(`updateCoordinates: Calculated startXWhite: ${startXWhite}, startYWhite: ${startYWhite}`);
     newCoordinates(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap);
 
     const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
-    console.log(`updateCoordinates: Calculated startXBlack: ${startXBlack}, startYBlack: ${startYBlack}`);
     newCoordinates(blackArray, startXBlack, startYBlack, pieceSize, pieceGap);
 
-    console.log("updateCoordinates: Matching whiteArray to grid");
     matchGrid(whiteArray, whiteMap, grid);
-    console.log("updateCoordinates: Matching blackArray to grid");
     matchGrid(blackArray, blackMap, grid);
-
-    console.log("Current blackArray:", blackArray);
-    console.log("Current whiteArray:", whiteArray);
 }
 
 
@@ -475,7 +452,6 @@ function initializeGame() {
 
 
 // Gameplay management
-
 
 function updateArray(x, y, player, oldRow = null, oldCol = null, draggedPiece = null) {
     let oldX = null, oldY = null;
@@ -778,7 +754,6 @@ function aiJumps(grid) {
 
     return randomMove;
 }
-
 
 // Selects a strategy
 
@@ -1112,6 +1087,7 @@ function getCoordinates(e) {
 
 // Mouse Down / Touch Start Event
 function handleStart(e) {
+    e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
 
     // Handle selecting a piece or starting a drag
@@ -1160,6 +1136,7 @@ function handleStart(e) {
 
 // Mouse Move / Touch Move Event
 function handleMove(e) {
+    e.preventDefault();
     if (isDragging && draggedPiece) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
@@ -1170,6 +1147,7 @@ function handleMove(e) {
 
 // Mouse Up / Touch End Event
 function handleEnd(e) {
+    e.preventDefault();
     if (!isDragging || !draggedPiece) return; // Early return if there's no dragging or no piece to drag
     isDragging = false;
 
