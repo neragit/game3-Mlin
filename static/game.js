@@ -167,13 +167,15 @@ function updateCoordinates() {
         });
     };
 
+    const widthArray = maxPieces * pieceSize + (8 * pieceGap);
+    
     // White pieces - below the grid
-    const startXWhite = centerX - totalArray / 2;
+    const startXWhite = centerX - widthArray / 2;
     const startYWhite = centerY + gridSize / 2 + gridStep;
     updateXY(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap, 'white');
 
     // Black pieces - above the grid
-    const startXBlack = centerX - totalArray / 2;
+    const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
     updateXY(blackArray, startXBlack, startYBlack, pieceSize, pieceGap, 'black');
 
@@ -317,9 +319,9 @@ function initializePieces() {
     blackArray = [];
     whiteArray = [];
     
-    const totalArray = maxPieces * pieceSize + (8 * pieceGap);
+    const widthArray = maxPieces * pieceSize + (8 * pieceGap);
     
-    const startXWhite = centerX - totalArray / 2;
+    const startXWhite = centerX - widthArray / 2;
     const startYWhite = centerY + gridSize / 2 + gridStep; // below the grid
 
     for (let i = 0; i < maxPieces; i++) {
@@ -327,7 +329,7 @@ function initializePieces() {
     }
 
     // Place black pieces directly above the grid
-    const startXBlack = centerX - totalArray / 2;
+    const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep; // above the grid
 
     for (let i = 0; i < maxPieces; i++) {
