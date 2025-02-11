@@ -1074,17 +1074,24 @@ function restartGame() {
 // Events
 
 function getCoordinates(e) {
-    let mouseX = e.offsetX;
-    let mouseY = e.offsetY;
+    let mouseX = 0;
+    let mouseY = 0;
 
-    if (e.touches) { // Handle touch
+    if (e.touches && e.touches.length > 0) { // At least one touch point
         const rect = canvas.getBoundingClientRect();
         mouseX = e.touches[0].clientX - rect.left;
         mouseY = e.touches[0].clientY - rect.top;
+    } 
+
+    else if (e.clientX && e.clientY) {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
     }
 
     return { mouseX, mouseY };
 }
+
 
 // Mouse Down / Touch Start Event
 function handleStart(e) {
