@@ -164,11 +164,13 @@ function updateCoordinates() {
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
                 if (isPlayer(row, col)) {
+                    console.log("isPlayer:", isPlayer);
                     const { x, y } = calculateCoordinates(row, col);
                     const indexToUpdate = playerArray.findIndex(piece => piece.x === x && piece.y === y);
 
                     if (indexToUpdate !== -1) {
                         playerArray[indexToUpdate] = { ...playerArray[indexToUpdate], x, y };
+                        console.log("indexToUpdate:", indexToUpdate);
                     }
                 }
             }
