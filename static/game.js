@@ -163,6 +163,8 @@ function updateCoordinates() {
 
 
 function resizeCanvas() {
+    console.log("black when resizeCanvas is called :", blackArray);
+    printMatrix(grid); 
     
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
@@ -170,6 +172,9 @@ function resizeCanvas() {
     // Recalculate center positions
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
+
+    console.log("black before Recalculate grid :", blackArray);
+    printMatrix(grid); 
 
     // Recalculate grid size based on canvas size
     gridSize = Math.min(canvas.width, canvas.height) * 0.5;
