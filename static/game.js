@@ -150,7 +150,9 @@ function redrawBoard() {
 
 function updateCoordinates() {
     const newCoordinates = (playerArray, startX, startY, pieceSize, pieceGap) => {
+        console.log(`newCoordinates: Updating coordinates for player array`);
         playerArray.forEach((piece, index) => {
+            console.log(`newCoordinates: piece ${index} - x: ${startX + index * (pieceSize + pieceGap)}, y: ${startY}`);
             playerArray[index] = {
                 ...piece, // Keep other properties
                 x: startX + index * (pieceSize + pieceGap),
@@ -160,45 +162,60 @@ function updateCoordinates() {
     };
 
     const matchGrid = (playerArray, playerMap, grid) => {
+        console.log("matchGrid: Starting grid match");
         for (let row = 0; row < grid.length; row++) {
+            console.log(`matchGrid: Processing row ${row}`);
             for (let col = 0; col < grid[row].length; col++) {
+                console.log(`matchGrid: Checking cell [${row}, ${col}]`);
                 const pieceIndex = [...playerMap.values()].findIndex(p => p.row === row && p.col === col);
                 
                 if (pieceIndex !== -1) {
+                    console.log(`matchGrid: Found piece at index ${pieceIndex} for cell [${row}, ${col}]`);
                     const piece = playerArray[pieceIndex];
 
                     if (piece.row !== null && piece.col !== null) {
                         const { x, y } = calculateCoordinates(row, col);
+                        console.log(`matchGrid: Calculated coordinates for piece at index ${pieceIndex}: x = ${x}, y = ${y}`);
                         playerArray[pieceIndex] = { ...piece, x, y };
                         playerMap.set(pieceIndex, { x, y, row, col });
-                        console.log(`Updated piece at index ${pieceIndex} to x: ${x}, y: ${y}`);
+                        console.log(`matchGrid: Updated piece at index ${pieceIndex} to x: ${x}, y: ${y}`);
                     } else {
-                        console.log(`Row and col are null for piece at index ${pieceIndex}`);
+                        console.log(`matchGrid: Row and col are null for piece at index ${pieceIndex}`);
                     }
+                } else {
+                    console.log(`matchGrid: No piece found for cell [${row}, ${col}]`);
                 }
             }
         }
     };
 
     const widthArray = maxPieces * pieceSize + (8 * pieceGap);
+    console.log(`updateCoordinates: Calculated widthArray: ${widthArray}`);
     
     const startXWhite = centerX - widthArray / 2;
     const startYWhite = centerY + gridSize / 2 + gridStep;
+    console.log(`updateCoordinates: Calculated startXWhite: ${startXWhite}, startYWhite: ${startYWhite}`);
     newCoordinates(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap);
 
     const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
+    console.log(`updateCoordinates: Calculated startXBlack: ${startXBlack}, startYBlack: ${startYBlack}`);
     newCoordinates(blackArray, startXBlack, startYBlack, pieceSize, pieceGap);
 
+    console.log("updateCoordinates: Updating blackMap");
     updateMap('black'); // Update blackArray and blackMap
+    console.log("updateCoordinates: Updating whiteMap");
     updateMap('white'); // Update whiteArray and whiteMap
 
+    console.log("updateCoordinates: Matching whiteArray to grid");
     matchGrid(whiteArray, whiteMap, grid);
+    console.log("updateCoordinates: Matching blackArray to grid");
     matchGrid(blackArray, blackMap, grid);
 
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
 }
+
 
 
 function resizeCanvas() {
