@@ -7,6 +7,7 @@ const pieceImages = {}; // Preloaded images
 const maxPieces = 9;
 const pieceSize = 30; 
 const pieceGap = 5; 
+const piecePadding = 10;
 
 let whiteArray = []; 
 let blackArray = [];
@@ -1094,9 +1095,9 @@ function handleStart(e) {
         // Check for black piece selection
         const clickedPiece = blackArray.find(piece =>
             mouseX >= piece.x &&
-            mouseX <= piece.x + pieceSize &&
+            mouseX <= piece.x + pieceSize + piecePadding &&
             mouseY >= piece.y &&
-            mouseY <= piece.y + pieceSize
+            mouseY <= piece.y + pieceSize + piecePadding
         );
 
         if (clickedPiece) {
@@ -1116,9 +1117,9 @@ function handleStart(e) {
         // Check for dragging white piece
         const clickedPiece = whiteArray.find(piece =>
             mouseX >= piece.x &&
-            mouseX <= piece.x + pieceSize &&
+            mouseX <= piece.x + pieceSize + piecePadding &&
             mouseY >= piece.y &&
-            mouseY <= piece.y + pieceSize
+            mouseY <= piece.y + pieceSize + piecePadding
         );
 
         if (clickedPiece) {
