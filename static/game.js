@@ -7,7 +7,9 @@ const pieceImages = {}; // Preloaded images
 const maxPieces = 9;
 const pieceSize = 30; 
 const pieceGap = 5; 
-const piecePadding = 10;
+
+const isPC = window.innerWidth >= 1024;
+const piecePadding = isPC ? 0 : 10;
 
 let whiteArray = []; 
 let blackArray = [];
@@ -283,27 +285,31 @@ function calculateCoordinates(row, col) {
 }
 
 function checkNode(x, y) {
-    
-    
-    // Calculate row and column based on mouse/touch position
-    const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
-    const col = Math.round((x - (centerX - gridSize / 2)) / gridStep);
+    console.log(`checkNode: Input coordinates: x=${x}, y=${y}`);
 
-    console.log(`centerX: ${centerX}, centerY: ${centerY}, gridSize: ${gridSize}`);
-    console.log(`checkNode: Calculated row=${row}, col=${col}, x=${x}, y=${y}`);
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = x - rect.left;
+    const offsetY = y - rect.top;
 
-    // Check if row and column are within bounds
+    console.log(`Adjusted coordinates: offsetX=${offsetX}, offsetY=${offsetY}`);
+
+    const row = Math.round(offsetY / gridStep);
+    const col = Math.round(offsetX / gridStep);
+
+    console.log(`Calculated row=${row}, col=${col}`);
+
     if (isWithinBounds(row, col)) {
-        const nodeX = centerX - gridSize / 2 + col * gridStep;
-        const nodeY = centerY - gridSize / 2 + row * gridStep;
+        const nodeX = rect.left + col * gridStep;
+        const nodeY = rect.top + row * gridStep;
 
-        console.log(`checkNode: Valid node at row=${row}, col=${col}, nodeX=${nodeX}, nodeY=${nodeY}`);
+        console.log(`Valid node at row=${row}, col=${col}, nodeX=${nodeX}, nodeY=${nodeY}`);
         return { row, col, x: nodeX - pieceSize / 2, y: nodeY - pieceSize / 2 };
+    } else {
+        console.log(`Invalid node at row=${row}, col=${col}`);
+        return null;
     }
-
-    console.log(`checkNode: Invalid node at row=${row}, col=${col}`);
-    return null; // Not a valid spot
 }
+
 
 
 function updateGrid() {
@@ -1085,6 +1091,7 @@ function getCoordinates(e) {
 
     if (e.touches && e.touches.length > 0) { // At least one touch point
         const rect = canvas.getBoundingClientRect();
+        console.log(`Canvas bounding rect: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
         mouseX = e.touches[0].clientX - rect.left;
         mouseY = e.touches[0].clientY - rect.top;
     } 
