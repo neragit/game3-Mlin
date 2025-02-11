@@ -179,7 +179,6 @@ function resizeCanvas() {
     console.log("black before :", blackMap);
     console.log("Updating coordinates...");
     updateCoordinates();
-    updateGrid();
     printMatrix(grid); 
     
     console.log("black after :", blackArray);
