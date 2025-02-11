@@ -1082,21 +1082,22 @@ function getCoordinates(e) {
         mouseX = e.touches[0].clientX - rect.left;
         mouseY = e.touches[0].clientY - rect.top;
     } 
-
     else if (e.clientX && e.clientY) {
         const rect = canvas.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
         mouseY = e.clientY - rect.top;
     }
 
+    console.log(`getCoordinates: mouseX=${mouseX}, mouseY=${mouseY}`);
     return { mouseX, mouseY };
 }
-
 
 // Mouse Down / Touch Start Event
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
+
+    console.log(`handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
 
     // Handle selecting a piece or starting a drag
     if (isSelecting) {
@@ -1110,6 +1111,7 @@ function handleStart(e) {
 
         if (clickedPiece) {
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
+            console.log(`Selected black piece, oldNode:`, oldNode);
             if (oldNode) {
                 const { row, col } = oldNode;
                 clearNode(row, col);
@@ -1138,6 +1140,9 @@ function handleStart(e) {
             startY = mouseY;
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
+            console.log(`Dragging started on white piece, oldNode:`, oldNode);
+        } else {
+            console.log("Error: No white piece selected.");
         }
     }
 }
@@ -1147,6 +1152,9 @@ function handleMove(e) {
     e.preventDefault();
     if (isDragging && draggedPiece) {
         const { mouseX, mouseY } = getCoordinates(e);
+
+        console.log(`handleMove: mouseX=${mouseX}, mouseY=${mouseY}, draggedPiece:`, draggedPiece);
+
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
         updateBoard(); // Redraw board with dragged piece
@@ -1156,14 +1164,22 @@ function handleMove(e) {
 // Mouse Up / Touch End Event
 function handleEnd(e) {
     e.preventDefault();
-    if (!isDragging || !draggedPiece) return;
-    isDragging = false;
+    if (!isDragging || !draggedPiece) {
+        console.log("handleEnd: Not dragging or no piece to release.");
+        return;
+    }
 
+    isDragging = false;
     const { mouseX, mouseY } = getCoordinates(e);
+
+    console.log(`handleEnd: mouseX=${mouseX}, mouseY=${mouseY}`);
 
     // Calculate the new position
     newNode = checkNode(mouseX, mouseY);
-    if (!newNode) return;
+    if (!newNode) {
+        console.log("Error: No valid node found for mouse release.");
+        return;
+    }
 
     const { row: newRow, col: newCol } = newNode;
     if (!isWithinBounds(newRow, newCol) || !isEmpty(newRow, newCol)) {
@@ -1171,6 +1187,8 @@ function handleEnd(e) {
         messageInvalid(newRow, newCol);
         return;
     }
+
+    console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
 
     if (oldNode) {
         const { row: oldRow, col: oldCol } = oldNode;
@@ -1182,11 +1200,13 @@ function handleEnd(e) {
     draggedPiece.x = newNode.x;
     draggedPiece.y = newNode.y;
 
+    console.log(`Piece placed at new position: x=${draggedPiece.x}, y=${draggedPiece.y}`);
+
     updateBoard(); // After placing/moving white
     updateMap("white");
     updateGrid();
     streak();
-        
+
     const waitingForSelection = setInterval(function() {
         if (!isSelecting) {
             toggleSandClock();
@@ -1200,6 +1220,7 @@ function handleEnd(e) {
         }
     }, 1000);
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeGame();
