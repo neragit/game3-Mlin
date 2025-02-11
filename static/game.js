@@ -1088,6 +1088,7 @@ function getCoordinates(e) {
 
 // Mouse Down / Touch Start Event
 function handleStart(e) {
+    e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
 
     // Handle selecting a piece or starting a drag
@@ -1136,6 +1137,7 @@ function handleStart(e) {
 
 // Mouse Move / Touch Move Event
 function handleMove(e) {
+    e.preventDefault();
     if (isDragging && draggedPiece) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
@@ -1146,7 +1148,8 @@ function handleMove(e) {
 
 // Mouse Up / Touch End Event
 function handleEnd(e) {
-    if (!isDragging || !draggedPiece) return; // Early return if there's no dragging or no piece to drag
+    e.preventDefault();
+    if (!isDragging || !draggedPiece) return;
     isDragging = false;
 
     const { mouseX, mouseY } = getCoordinates(e);
