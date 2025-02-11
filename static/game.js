@@ -150,38 +150,48 @@ function redrawBoard() {
 }
 
 function updateCoordinates() {
-    const updateXY = (playerArray, startX, startY, pieceSize, pieceGap, direction) => {
+    const newCoordinates = (playerArray, startX, startY, pieceSize, pieceGap) => {
         playerArray.forEach((piece, index) => {
-            // Check if coordinates have been calculated already
-            if (piece.row >= 0 && piece.row <= 6 && piece.col >= 0 && piece.col <= 6) {
-                const { x, y } = calculateCoordinates(piece.row, piece.col);
-                playerArray[index] = { ...piece, x, y };
-            } else {
-                // If not calculated, assign x, y using the new starting position
-                playerArray[index] = {
-                    ...piece,
-                    x: startX + index * (pieceSize + pieceGap),
-                    y: startY
-                };
-            }
+            playerArray[index] = {
+                ...piece, // Keep other properties
+                x: startX + index * (pieceSize + pieceGap), // Calculate the new x position based on index
+                y: startY
+            };
         });
+    };
+
+    const matchGrid = (playerArray, isPlayer, grid) => {
+        for (let row = 0; row < grid.length; row++) {
+            for (let col = 0; col < grid[row].length; col++) {
+                if (isPlayer(row, col)) {
+                    const { x, y } = calculateCoordinates(row, col);
+                    const indexToUpdate = playerArray.findIndex(piece => piece.x === x && piece.y === y);
+
+                    if (indexToUpdate !== -1) {
+                        playerArray[indexToUpdate] = { ...playerArray[indexToUpdate], x, y };
+                    }
+                }
+            }
+        }
     };
 
     const widthArray = maxPieces * pieceSize + (8 * pieceGap);
     
-    // White pieces - below the grid
-    const startXWhite = centerX - widthArray / 2;
-    const startYWhite = centerY + gridSize / 2 + gridStep;
-    updateXY(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap, 'white');
+    const startXWhite = centerX - widthArray / 2; // Calculate the starting X for white pieces, centered horizontally
+    const startYWhite = centerY + gridSize / 2 + gridStep; // Calculate the starting Y for white pieces, below the grid
+    newCoordinates(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap);
 
-    // Black pieces - above the grid
     const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
-    updateXY(blackArray, startXBlack, startYBlack, pieceSize, pieceGap, 'black');
+    newCoordinates(blackArray, startXBlack, startYBlack, pieceSize, pieceGap);
+
+    matchGrid(whiteArray, isWhite, grid);
+    matchGrid(blackArray, isBlack, grid);
 
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
 }
+
 
 
 
