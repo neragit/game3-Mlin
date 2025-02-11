@@ -124,10 +124,12 @@ function drawGrid() {
     ctx.stroke();
 }
 
-function drawPieces(piecesArray, type) {
-    const img = pieceImages[type];
+function drawPieces(player) {
+    console.log("Drawing pieces for", player);
+    const playerArray = player === "white" ? whiteArray : blackArray;
+    const img = pieceImages[player];
     
-    piecesArray.forEach(piece => {
+    playerArray.forEach(piece => {
         if (piece !== draggedPiece) {
             ctx.drawImage(img, piece.x, piece.y, pieceSize, pieceSize);
         }
@@ -138,10 +140,11 @@ function drawPieces(piecesArray, type) {
     }
 }
 
-function updateResizedBoard() {
+
+function redrawBoard() {
     drawGrid();
-    drawPieces(whiteArray, "white"); 
-    drawPieces(blackArray, "black");
+    drawPieces("white"); 
+    drawPieces("black");
 }
 
 function updateCoordinates() {
@@ -157,19 +160,29 @@ function updateCoordinates() {
 }
 
 function resizeCanvas() {
+    
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
 
-    // Recalculate center positions after resizing
+    // Recalculate center positions
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
 
     // Recalculate grid size based on canvas size
     gridSize = Math.min(canvas.width, canvas.height) * 0.5;
     gridStep = gridSize / 6;
-    
+
+    console.log("black before :", blackArray);
+    console.log("black before :", blackMap);
+    console.log("Updating coordinates...);
     updateCoordinates();
-    updateResizedBoard();
+    updateGrid();
+    printMatrix(grid); 
+    
+    console.log("black after :", blackArray);
+    console.log("black after :", blackMap);
+    console.log("Redrawing board...);
+    redrawBoard();
 }
 
 window.addEventListener('resize', resizeCanvas);
@@ -213,15 +226,15 @@ function printMatrix(matrix) {
 }
 
 const directions = {
-    up: [-1, 0],    // Move 1 step up (decrease row)
-    down: [1, 0],   // Move 1 step down (increase row)
-    left: [0, -1],  // Move 1 step left (decrease column)
-    right: [0, 1]   // Move 1 step right (increase column)
+    up: [-1, 0],    // 1 step up
+    down: [1, 0],   // 1 step down
+    left: [0, -1],  // 1 step left
+    right: [0, 1]   // 1 step right
     };
 
 const directionsSimple = {
-    down: [1, 0],   // Move 1 step down (increase row)
-    right: [0, 1]   // Move 1 step right (increase column)
+    down: [1, 0],   // 1 step down
+    right: [0, 1]   // 1 step right
     };
 
 
@@ -306,43 +319,43 @@ function initializePieces() {
     console.log("Current whiteArray:", whiteArray);
 }
 
-function initializeMap(piecesArray) {
-    const piecesMap = new Map();
-    piecesArray.forEach((piece, index) => {
-        piecesMap.set(index, {
+function initializeMap(playerArray) {
+    const playerMap = new Map();
+    playerArray.forEach((piece, index) => {
+        playerMap.set(index, {
             x: piece.x,
             y: piece.y,
             row: null,
             col: null // Initially out of bounds
         });
     });
-    return piecesMap;
+    return playerMap;
 }
 
-let blackPiecesMap = initializeMap(blackArray);
-let whitePiecesMap = initializeMap(whiteArray);
-
-function updatePlayerMap(piecesArray, piecesMap) {
-    piecesArray.forEach((piece, index) => {
-        const spot = checkNode(piece.x, piece.y); // Calculate row and col
-        piecesMap.set(index, {
-            x: piece.x,
-            y: piece.y,
-            row: spot ? spot.row : null,
-            col: spot ? spot.col : null
-        });
-    });
-}
+let blackMap = initializeMap(blackArray);
+let whiteMap = initializeMap(whiteArray);
 
 function updateMap(player) {
-    if (player === "black") {
-        updatePlayerMap(blackArray, blackPiecesMap);
-        console.log("black:", blackArray);
-        console.log("black:", blackPiecesMap);
-    } else if (player === "white") {
-        updatePlayerMap(whiteArray, whitePiecesMap);
-        console.log("white:", whiteArray);
-        console.log("white:", whitePiecesMap);
+    const playerData = {
+        black: { playerArray: blackArray, playerMap: blackMap },
+        white: { playerArray: whiteArray, playerMap: whiteMap }
+    };
+
+    const { playerArray, playerMap } = playerData[player] || {};
+
+    if (playerArray && playerMap) {
+        playerArray.forEach((piece, index) => {
+            const spot = checkNode(piece.x, piece.y); // Calculate row and col
+            playerMap.set(index, {
+                x: piece.x,
+                y: piece.y,
+                row: spot ? spot.row : null,
+                col: spot ? spot.col : null
+            });
+        });
+
+        console.log(`${player}:`, playerArray);
+        console.log(`${player} Map:`, playerMap);
     }
 }
 
@@ -351,9 +364,7 @@ function updateBoard() {
     whiteOnBoard = 0;
     blackOnBoard = 0;
 
-    drawGrid();
-    drawPieces(blackArray, "black");
-    drawPieces(whiteArray, "white"); 
+    redrawBoard();
 
     for (let row = 0; row < grid.length; row++) {
         for (let col = 0; col < grid[row].length; col++) {
@@ -381,8 +392,8 @@ function resetBoard() {
         stepsDone = 0;
         replacementIndex = 0;
 
-        blackPiecesMap = initializeMap(blackArray);
-        whitePiecesMap = initializeMap(whiteArray);
+        blackMap = initializeMap(blackArray);
+        whiteMap = initializeMap(whiteArray);
 
         updateScore();
         updateBoard();
