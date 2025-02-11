@@ -150,16 +150,17 @@ function redrawBoard() {
 }
 
 function updateCoordinates() {
-    blackArray.forEach((piece, index) => {
-        const newPos = calculateCoordinates(piece.row, piece.col);
-        blackArray[index] = { ...piece, x: newPos.x, y: newPos.y };
-    });
+    const updateXY = (playerArray) => {
+        playerArray.forEach((piece, index) => {
+            const { x, y } = calculateCoordinates(piece.row, piece.col);
+            playerArray[index] = { ...piece, x, y };
+        });
+    };
 
-    whiteArray.forEach((piece, index) => {
-        const newPos = calculateCoordinates(piece.row, piece.col);
-        whiteArray[index] = { ...piece, x: newPos.x, y: newPos.y };
-    });
+    updateXY(blackArray);
+    updateXY(whiteArray);
 }
+
 
 function resizeCanvas() {
     
@@ -270,28 +271,25 @@ function checkNode(x, y) {
 }
 
 function updateGrid() {
-    for (let row = 0; row < grid.length; row++) {
-        for (let col = 0; col < grid[row].length; col++) {
-            if (grid[row][col] !== 'x') {
-                grid[row][col] = 0;
+    grid.forEach((row, rowIndex) => {
+        row.forEach((col, colIndex) => {
+            if (col !== 'x') grid[rowIndex][colIndex] = 0; // Reset
+        });
+    });
+
+    const updateSpot = (playerArray, value) => {
+        playerArray.forEach(piece => {
+            const spot = checkNode(piece.x, piece.y);
+            if (spot && grid[spot.row] && grid[spot.row][spot.col] !== null) {
+                grid[spot.row][spot.col] = value;
             }
-        }
-    }
+        });
+    };
 
-    blackArray.forEach(piece => {
-        const spot = checkNode(piece.x, piece.y);
-        if (spot) {
-            grid[spot.row][spot.col] = -1;
-        }
-    });
-
-    whiteArray.forEach(piece => {
-        const spot = checkNode(piece.x, piece.y);
-        if (spot) {
-            grid[spot.row][spot.col] = 1;
-        }
-    });
+    updateSpot(blackArray, -1);
+    updateSpot(whiteArray, 1);
 }
+
 
 
 // runs at (re)start
