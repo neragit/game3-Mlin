@@ -284,10 +284,12 @@ function calculateCoordinates(row, col) {
 
 function checkNode(x, y) {
     
+    
     // Calculate row and column based on mouse/touch position
     const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
     const col = Math.round((x - (centerX - gridSize / 2)) / gridStep);
 
+    console.log(`centerX: ${centerX}, centerY: ${centerY}, gridSize: ${gridSize}`);
     console.log(`checkNode: Calculated row=${row}, col=${col}, x=${x}, y=${y}`);
 
     // Check if row and column are within bounds
@@ -1142,6 +1144,7 @@ function handleStart(e) {
             mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
             startX = mouseX;
             startY = mouseY;
+            
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
