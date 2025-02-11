@@ -144,6 +144,18 @@ function updateResizedBoard() {
     drawPieces(blackArray, "black");
 }
 
+function updateCoordinates() {
+    blackArray.forEach((piece, index) => {
+        const newPos = calculateCoordinates(piece.row, piece.col);
+        blackArray[index] = { ...piece, x: newPos.x, y: newPos.y };
+    });
+
+    whiteArray.forEach((piece, index) => {
+        const newPos = calculateCoordinates(piece.row, piece.col);
+        whiteArray[index] = { ...piece, x: newPos.x, y: newPos.y };
+    });
+}
+
 function resizeCanvas() {
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
@@ -155,7 +167,8 @@ function resizeCanvas() {
     // Recalculate grid size based on canvas size
     gridSize = Math.min(canvas.width, canvas.height) * 0.5;
     gridStep = gridSize / 6;
-
+    
+    updateCoordinates();
     updateResizedBoard();
 }
 
@@ -1021,13 +1034,26 @@ function restartGame() {
 
 // Events
 
-canvas.addEventListener('mousedown', function (e) {
-    const mouseX = e.offsetX;
-    const mouseY = e.offsetY;
+function getCoordinates(e) {
+    let mouseX = e.offsetX;
+    let mouseY = e.offsetY;
 
-    // If in the process of selecting a black piece, handle that first
+    if (e.touches) { // Handle touch
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+    }
+
+    return { mouseX, mouseY };
+}
+
+// Mouse Down / Touch Start Event
+function handleStart(e) {
+    const { mouseX, mouseY } = getCoordinates(e);
+
+    // Handle selecting a piece or starting a drag
     if (isSelecting) {
-        // Check if the click intersects with any piece from blackArray
+        // Check for black piece selection
         const clickedPiece = blackArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize &&
@@ -1038,8 +1064,8 @@ canvas.addEventListener('mousedown', function (e) {
         if (clickedPiece) {
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             if (oldNode) {
-                const { row, col } = oldNode; // Extract row and col
-                clearNode(row, col);  // Pass row and col to clearNode
+                const { row, col } = oldNode;
+                clearNode(row, col);
                 console.log(`Removing from array...`);
                 removeFromArray(row, col, "black");
                 isSelecting = false;
@@ -1049,7 +1075,7 @@ canvas.addEventListener('mousedown', function (e) {
             console.log("Error: Must select a black piece.");
         }
     } else {
-        // If not selecting a black piece, check for dragging a white piece
+        // Check for dragging white piece
         const clickedPiece = whiteArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize &&
@@ -1061,38 +1087,32 @@ canvas.addEventListener('mousedown', function (e) {
             isDragging = true;
             draggedPiece = clickedPiece;
             mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
-
-            // Set start position for drag
             startX = mouseX;
             startY = mouseY;
 
-            // Calculate the oldNode (starting position of the piece)
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
         }
     }
-});
+}
 
-
-
-canvas.addEventListener('mousemove', function (e) {
+// Mouse Move / Touch Move Event
+function handleMove(e) {
     if (isDragging && draggedPiece) {
-        const mouseX = e.offsetX;
-        const mouseY = e.offsetY;
+        const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
-        updateBoard(); // necessary
+        updateBoard(); // Redraw board with dragged piece
     }
-});
+}
 
-
-canvas.addEventListener('mouseup', function (e) {
+// Mouse Up / Touch End Event
+function handleEnd(e) {
     if (!isDragging || !draggedPiece) return; // Early return if there's no dragging or no piece to drag
     isDragging = false;
 
-    const mouseX = e.offsetX;
-    const mouseY = e.offsetY;
+    const { mouseX, mouseY } = getCoordinates(e);
 
-    // Calculate end position
+    // Calculate the new position
     newNode = checkNode(mouseX, mouseY);
     if (!newNode) return;
 
@@ -1113,15 +1133,12 @@ canvas.addEventListener('mouseup', function (e) {
     draggedPiece.x = newNode.x;
     draggedPiece.y = newNode.y;
 
-    //console.log(`Mouse Position: [${mouseX}, ${mouseY}] at New Node: [${newRow}, ${newCol}]`);
-
-    updateBoard(); // after placing/moving white
+    updateBoard(); // After placing/moving white
     updateMap("white");
     updateGrid();
     streak();
         
     const waitingForSelection = setInterval(function() {
-    
         if (!isSelecting) {
             toggleSandClock();
             clearInterval(waitingForSelection); // Stop the interval once selection is done
@@ -1129,18 +1146,24 @@ canvas.addEventListener('mouseup', function (e) {
                 aiMove();
                 draggedPiece = null; // Reset dragged piece
             }, 1000);
-            
         } else {
             console.log("AI is waiting for player selection to finish...");
         }
     }, 1000);
-});
-
-
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeGame();
     initializeFireworks();
 });
+
+canvas.addEventListener('mousedown', handleStart);
+canvas.addEventListener('touchstart', handleStart);
+
+canvas.addEventListener('mousemove', handleMove);
+canvas.addEventListener('touchmove', handleMove);
+
+canvas.addEventListener('mouseup', handleEnd);
+canvas.addEventListener('touchend', handleEnd);
 
 document.getElementById('restart-button').addEventListener('click', restartGame);
