@@ -159,9 +159,10 @@ function updateCoordinates() {
         });
     };
     
+    
     const matchGrid = (playerArray, playerMap, grid) => {
         console.log("Maps BEFORE matchGrid");
-        console.log(`${player} Map:`, playerMap);
+        console.log(playerMap);
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[row].length; col++) {
                 const pieceIndex = [...playerMap.values()].findIndex(p => p.row === row && p.col === col);
@@ -185,10 +186,11 @@ function updateCoordinates() {
                 }
             }
         }
+        console.log("Maps AFTER matchGrid");
+        console.log(playerMap);
     };
 
-    console.log("Maps AFTER matchGrid");
-    console.log(`${player} Map:`, playerMap);
+    
     
     const widthArray = maxPieces * pieceSize + (8 * pieceGap);
     console.log(`updateCoordinates: Calculated widthArray: ${widthArray}`);
