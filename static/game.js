@@ -270,11 +270,10 @@ const directionsSimple = {
     right: [0, 1]   // 1 step right
     };
 
-
 function isWithinBounds(r, c) {
+    console.log(`Checking bounds: row=${r}, col=${c}`);
     return !(r < 0 || r >= 7 || c < 0 || c >= 7);
 }
-
 
 // Calculate x, y based on grid(row, column)
 function calculateCoordinates(row, col) {
@@ -283,22 +282,27 @@ function calculateCoordinates(row, col) {
     return { x, y };
 }
 
-// Check if a spot(x,y) is a valid node in the grid(r,c)
 function checkNode(x, y) {
-
+    
+    // Calculate row and column based on mouse/touch position
     const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
     const col = Math.round((x - (centerX - gridSize / 2)) / gridStep);
 
-     if (isWithinBounds(row, col)) {
-    
+    console.log(`checkNode: Calculated row=${row}, col=${col}, x=${x}, y=${y}`);
+
+    // Check if row and column are within bounds
+    if (isWithinBounds(row, col)) {
         const nodeX = centerX - gridSize / 2 + col * gridStep;
         const nodeY = centerY - gridSize / 2 + row * gridStep;
 
-        // console.log(`Calculated row: ${row}, col: ${col}, x: ${nodeX - pieceSize / 2}, y: ${nodeY - pieceSize / 2}`); //
+        console.log(`checkNode: Valid node at row=${row}, col=${col}, nodeX=${nodeX}, nodeY=${nodeY}`);
         return { row, col, x: nodeX - pieceSize / 2, y: nodeY - pieceSize / 2 };
     }
+
+    console.log(`checkNode: Invalid node at row=${row}, col=${col}`);
     return null; // Not a valid spot
 }
+
 
 function updateGrid() {
     grid.forEach((row, rowIndex) => {
