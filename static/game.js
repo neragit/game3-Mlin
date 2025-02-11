@@ -205,11 +205,6 @@ function updateCoordinates() {
     console.log(`updateCoordinates: Calculated startXBlack: ${startXBlack}, startYBlack: ${startYBlack}`);
     newCoordinates(blackArray, startXBlack, startYBlack, pieceSize, pieceGap);
 
-    console.log("updateCoordinates: Updating blackMap");
-    updateMap('black'); // Update blackArray and blackMap
-    console.log("updateCoordinates: Updating whiteMap");
-    updateMap('white'); // Update whiteArray and whiteMap
-
     console.log("updateCoordinates: Matching whiteArray to grid");
     matchGrid(whiteArray, whiteMap, grid);
     console.log("updateCoordinates: Matching blackArray to grid");
