@@ -296,8 +296,8 @@ function calculateCoordinates(row, col) {
 // Check if a spot(x,y) is a valid node in the grid(r,c)
 function checkNode(x, y) {
 
-    const row = Math.floor((y - (centerY - gridSize / 2)) / gridStep);
-    const col = Math.floor((x - (centerX - gridSize / 2)) / gridStep);
+    const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
+    const col = Math.round((x - (centerX - gridSize / 2)) / gridStep);
 
      if (isWithinBounds(row, col)) {
     
