@@ -1089,14 +1089,14 @@ function getCoordinates(e) {
     let mouseX = 0;
     let mouseY = 0;
 
+    const rect = canvas.getBoundingClientRect();
+    console.log(`Canvas bounding rect: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
+
     if (e.touches && e.touches.length > 0) { // At least one touch point
-        const rect = canvas.getBoundingClientRect();
-        console.log(`Canvas bounding rect: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
         mouseX = e.touches[0].clientX - rect.left;
         mouseY = e.touches[0].clientY - rect.top;
     } 
     else if (e.clientX && e.clientY) {
-        const rect = canvas.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
         mouseY = e.clientY - rect.top;
     }
