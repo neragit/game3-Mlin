@@ -126,7 +126,7 @@ function drawGrid() {
 
 function drawPieces(player) {
     console.log("Drawing pieces for", player);
-    const playerArray = player === "white" ? whiteArray : blackArray;
+    const playerArray = player === "black" ? blackArray : whiteArray;
     const img = pieceImages[player];
     
     playerArray.forEach(piece => {
