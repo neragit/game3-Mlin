@@ -150,16 +150,37 @@ function redrawBoard() {
 }
 
 function updateCoordinates() {
-    const updateXY = (playerArray) => {
+    const updateXY = (playerArray, startX, startY, pieceSize, pieceGap, direction) => {
         playerArray.forEach((piece, index) => {
-            const { x, y } = calculateCoordinates(piece.row, piece.col);
-            playerArray[index] = { ...piece, x, y };
+            // Check if coordinates have been calculated already
+            if (piece.row >= 0 && piece.row <= 6 && piece.col >= 0 && piece.col <= 6) {
+                const { x, y } = calculateCoordinates(piece.row, piece.col);
+                playerArray[index] = { ...piece, x, y };
+            } else {
+                // If not calculated, assign x, y using the new starting position
+                playerArray[index] = {
+                    ...piece,
+                    x: startX + index * (pieceSize + pieceGap),
+                    y: startY
+                };
+            }
         });
     };
 
-    updateXY(blackArray);
-    updateXY(whiteArray);
+    // White pieces - below the grid
+    const startXWhite = centerX - totalArray / 2;
+    const startYWhite = centerY + gridSize / 2 + gridStep;
+    updateXY(whiteArray, startXWhite, startYWhite, pieceSize, pieceGap, 'white');
+
+    // Black pieces - above the grid
+    const startXBlack = centerX - totalArray / 2;
+    const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep;
+    updateXY(blackArray, startXBlack, startYBlack, pieceSize, pieceGap, 'black');
+
+    console.log("Current blackArray:", blackArray);
+    console.log("Current whiteArray:", whiteArray);
 }
+
 
 
 function resizeCanvas() {
@@ -173,18 +194,12 @@ function resizeCanvas() {
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
 
-    console.log("black before Recalculate grid :", blackArray);
-    printMatrix(grid); 
-
     // Recalculate grid size based on canvas size
     gridSize = Math.min(canvas.width, canvas.height) * 0.5;
     gridStep = gridSize / 6;
 
-    console.log("black before :", blackArray);
-    console.log("black before :", blackMap);
     console.log("Updating coordinates...");
     updateCoordinates();
-    printMatrix(grid); 
     
     console.log("black after :", blackArray);
     console.log("black after :", blackMap);
