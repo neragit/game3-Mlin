@@ -9,7 +9,7 @@ const pieceSize = 30;
 const pieceGap = 5; 
 
 const isPC = window.innerWidth >= 1024;
-const piecePadding = isPC ? 0 : 10;
+const piecePadding = 10;
 
 let whiteArray = []; 
 let blackArray = [];
