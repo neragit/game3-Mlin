@@ -1096,17 +1096,15 @@ function getCoordinates(e) {
 }
 
 // Mouse Down / Touch Start Event
-// Mouse Down / Touch Start Event
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
-
     console.log(`handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
+    let clickedPiece = null;
 
-    // Handle selecting a piece or starting a drag
     if (isSelecting) {
         // Check for black piece selection
-        const clickedPiece = blackArray.find(piece =>
+        clickedPiece = blackArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize + piecePadding &&
             mouseY >= piece.y &&
@@ -1129,7 +1127,7 @@ function handleStart(e) {
         }
     } else {
         // Check for dragging white piece
-        const clickedPiece = whiteArray.find(piece =>
+        clickedPiece = whiteArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize + piecePadding &&
             mouseY >= piece.y &&
@@ -1149,8 +1147,6 @@ function handleStart(e) {
             console.log("Error: No white piece selected.");
         }
     }
-
-    // Debugging the mouse position vs piece bounds
     console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
 
