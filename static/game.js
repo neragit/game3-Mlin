@@ -1096,6 +1096,7 @@ function getCoordinates(e) {
 }
 
 // Mouse Down / Touch Start Event
+// Mouse Down / Touch Start Event
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
@@ -1141,7 +1142,6 @@ function handleStart(e) {
             mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
             startX = mouseX;
             startY = mouseY;
-            
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
@@ -1149,7 +1149,11 @@ function handleStart(e) {
             console.log("Error: No white piece selected.");
         }
     }
+
+    // Debugging the mouse position vs piece bounds
+    console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
+
 
 // Mouse Move / Touch Move Event
 function handleMove(e) {
