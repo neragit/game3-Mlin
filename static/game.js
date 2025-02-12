@@ -287,12 +287,6 @@ function calculateCoordinates(row, col) {
 function checkNode(x, y) {
     console.log(`checkNode: Input coordinates: x=${x}, y=${y}`);
 
-    const rect = canvas.getBoundingClientRect();
-    const offsetX = x - rect.left;
-    const offsetY = y - rect.top;
-
-    console.log(`Adjusted coordinates: offsetX=${offsetX}, offsetY=${offsetY}`);
-
     const row = Math.round(offsetY / gridStep);
     const col = Math.round(offsetX / gridStep);
 
@@ -309,8 +303,6 @@ function checkNode(x, y) {
         return null;
     }
 }
-
-
 
 function updateGrid() {
     grid.forEach((row, rowIndex) => {
