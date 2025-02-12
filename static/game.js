@@ -284,24 +284,22 @@ function calculateCoordinates(row, col) {
     return { x, y };
 }
 
+// Check if a spot(x,y) is a valid node in the grid(r,c)
 function checkNode(x, y) {
-    console.log(`checkNode: Input coordinates: x=${x}, y=${y}`);
 
-    const row = Math.round(offsetY / gridStep);
-    const col = Math.round(offsetX / gridStep);
+    const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
+    const col = Math.round((x - (centerX - gridSize / 2)) / gridStep);
 
-    console.log(`Calculated row=${row}, col=${col}`);
+     if (isWithinBounds(row, col)) {
+    
+        const nodeX = centerX - gridSize / 2 + col * gridStep;
+        const nodeY = centerY - gridSize / 2 + row * gridStep;
 
-    if (isWithinBounds(row, col)) {
-        const nodeX = rect.left + col * gridStep;
-        const nodeY = rect.top + row * gridStep;
-
-        console.log(`Valid node at row=${row}, col=${col}, nodeX=${nodeX}, nodeY=${nodeY}`);
+        // console.log(`Calculated row: ${row}, col: ${col}, x: ${nodeX - pieceSize / 2}, y: ${nodeY - pieceSize / 2}`); //
         return { row, col, x: nodeX - pieceSize / 2, y: nodeY - pieceSize / 2 };
-    } else {
-        console.log(`Invalid node at row=${row}, col=${col}`);
-        return null;
     }
+    return null; // Not a valid spot
+    console.log("Invalid spot.")
 }
 
 function updateGrid() {
