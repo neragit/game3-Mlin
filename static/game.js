@@ -11,6 +11,8 @@ const pieceGap = 5;
 const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
 const piecePadding = isPC ? 0 : 10;
 
+let initialized = false;
+
 let whiteArray = []; 
 let blackArray = [];
 
@@ -145,7 +147,7 @@ function drawPieces(player) {
 
 
 
-function redrawBoard() {
+function drawBoard() {
     drawGrid();
     drawPieces("white"); 
     drawPieces("black");
@@ -196,10 +198,7 @@ function updateCoordinates() {
 
 
 
-function resizeCanvas() {
-    console.log("black when resizeCanvas is called :", blackArray);
-    printMatrix(grid); 
-    
+function resizeCanvas() {    
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
 
@@ -209,13 +208,20 @@ function resizeCanvas() {
     gridSize = Math.min(canvas.width, canvas.height) / 2;
     gridStep = gridSize / 6;
 
+    if (initialized) {
+        console.log("Updating coordinates...");
+        updateCoordinates();
+    }
+
     console.log("Updating coordinates...");
     updateCoordinates();
     
     console.log("black after :", blackArray);
     console.log("black after :", blackMap);
     console.log("Redrawing board...");
-    redrawBoard();
+
+    ///////////////////////////////////////
+    drawBoard();
 }
 
 window.addEventListener('resize', resizeCanvas);
@@ -337,7 +343,7 @@ function initializePieces() {
         whiteArray.push({ x: startXWhite + i * (pieceSize + pieceGap), y: startYWhite });
     }
 
-    // Place black pieces directly above the grid
+    // Black pieces above the grid
     const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep; // above the grid
 
@@ -345,6 +351,8 @@ function initializePieces() {
         blackArray.push({ x: startXBlack + i * (pieceSize + pieceGap), y: startYBlack });
     }
 
+    initialized = true;
+    
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
 }
@@ -394,7 +402,7 @@ function updateBoard() {
     whiteOnBoard = 0;
     blackOnBoard = 0;
 
-    redrawBoard();
+    drawBoard();
 
     for (let row = 0; row < grid.length; row++) {
         for (let col = 0; col < grid[row].length; col++) {
