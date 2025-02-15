@@ -203,12 +203,10 @@ function resizeCanvas() {
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
 
-    // Recalculate center positions
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
 
-    // Recalculate grid size based on canvas size
-    gridSize = Math.min(canvas.width, canvas.height) * 0.5;
+    gridSize = Math.min(canvas.width, canvas.height) / 2;
     gridStep = gridSize / 6;
 
     console.log("Updating coordinates...");
@@ -277,14 +275,14 @@ function isWithinBounds(r, c) {
     return !(r < 0 || r >= 7 || c < 0 || c >= 7);
 }
 
-// Calculate x, y based on grid(row, column)
+// Calculate x, y based on grid(row, col)
 function calculateCoordinates(row, col) {
     const x = centerX - gridSize / 2 + col * gridStep - pieceSize / 2;
     const y = centerY - gridSize / 2 + row * gridStep - pieceSize / 2;
     return { x, y };
 }
 
-// Check if a spot(x,y) is a valid node in the grid(r,c)
+// Check if a spot(x,y) is a valid node in the grid(row, col)
 function checkNode(x, y) {
 
     const row = Math.round((y - (centerY - gridSize / 2)) / gridStep);
@@ -1103,7 +1101,6 @@ function handleStart(e) {
     let clickedPiece = null;
 
     if (isSelecting) {
-        // Check for black piece selection
         clickedPiece = blackArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize + piecePadding &&
@@ -1126,7 +1123,6 @@ function handleStart(e) {
             console.log("Error: Must select a black piece.");
         }
     } else {
-        // Check for dragging white piece
         clickedPiece = whiteArray.find(piece =>
             mouseX >= piece.x &&
             mouseX <= piece.x + pieceSize + piecePadding &&
