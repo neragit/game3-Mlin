@@ -269,7 +269,6 @@ const directionsSimple = {
     };
 
 function isWithinBounds(r, c) {
-    console.log(`Checking bounds: row=${r}, col=${c}`);
     return !(r < 0 || r >= 7 || c < 0 || c >= 7);
 }
 
