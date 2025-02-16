@@ -195,8 +195,6 @@ function updateCoordinates() {
     matchGrid(blackArray, blackMap, grid);
 }
 
-
-
 function resizeCanvas() {    
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
@@ -210,20 +208,15 @@ function resizeCanvas() {
     if (initialized) {
         console.log("Updating coordinates...");
         updateCoordinates();
+
+        console.log("black after :", blackArray);
+        console.log("black after :", blackMap);
+        console.log("Redrawing board...");
+        
     }
-
-    console.log("Updating coordinates...");
-    updateCoordinates();
     
-    console.log("black after :", blackArray);
-    console.log("black after :", blackMap);
-    console.log("Redrawing board...");
-
-    ///////////////////////////////////////
     drawBoard();
 }
-
-window.addEventListener('resize', resizeCanvas);
 
 // Grid setup (matrix)
 
@@ -1087,14 +1080,8 @@ function getCoordinates(e) {
     const rect = canvas.getBoundingClientRect();
     console.log(`Canvas bounding rect: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
 
-    if (e.touches && e.touches.length > 0) { // At least one touch point
-        mouseX = e.touches[0].clientX - rect.left;
-        mouseY = e.touches[0].clientY - rect.top;
-    } 
-    else if (e.clientX && e.clientY) {
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-    }
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
 
     console.log(`getCoordinates: mouseX=${mouseX}, mouseY=${mouseY}`);
     return { mouseX, mouseY };
@@ -1152,7 +1139,6 @@ function handleStart(e) {
     }
     console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
-
 
 // Mouse Move / Touch Move Event
 function handleMove(e) {
@@ -1228,19 +1214,15 @@ function handleEnd(e) {
     }, 1000);
 }
 
-
 document.addEventListener("DOMContentLoaded", function () {
     initializeGame();
     initializeFireworks();
 });
 
-canvas.addEventListener('mousedown', handleStart);
-canvas.addEventListener('touchstart', handleStart);
+window.addEventListener('resize', resizeCanvas);
 
-canvas.addEventListener('mousemove', handleMove);
-canvas.addEventListener('touchmove', handleMove);
-
-canvas.addEventListener('mouseup', handleEnd);
-canvas.addEventListener('touchend', handleEnd);
+canvas.addEventListener('pointerdown', handleStart);
+canvas.addEventListener('pointermove', handleMove);
+canvas.addEventListener('pointerup', handleEnd);
 
 document.getElementById('restart-button').addEventListener('click', restartGame);
