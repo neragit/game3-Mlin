@@ -443,6 +443,17 @@ function startMessage() {
     });
 }
 
+function checkPhase3() {
+    if (whiteOnBoard === 3 || blackOnBoard === 3) {
+        const phase3Message = document.getElementById('phase3');
+        phase3Message.hidden = false;
+
+        setTimeout(() => {
+            phase3Message.hidden = true;
+        }, 3000);
+    }
+}
+
 function initializeGame() {
     resizeCanvas();
     preloadImages(() => {
@@ -763,9 +774,16 @@ function aiMove() {
     findThreat(grid);
     if (!nineStepsDone && stepsDone === 9) {
         nineStepsDone = true;
+        const phase2Message = document.getElementById('phase2');
+        phase2Message.hidden = false;
+
+        setTimeout(() => {
+            phase2Message.hidden = true;
+        }, 3000);
     }
 
     if (nineStepsDone) {
+        checkPhase3();
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
             restrictedMove();
             aiRestrictedMove(grid);
