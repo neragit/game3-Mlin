@@ -16,6 +16,7 @@ body {
     box-sizing: border-box;
     background-image: url("../static/images/tablehd.jpg");
     background-size: cover;
+    touch-action: none;
 }
 
 #score-box {
