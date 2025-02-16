@@ -332,11 +332,6 @@ function initializePieces() {
 
     for (let i = 0; i < maxPieces; i++) {
         whiteArray.push({ x: startXWhite + i * (pieceSize + pieceGap), y: startYWhite });
-
-        // Log the piece's coordinates and bounds (top-left and bottom-right)
-        console.log(`Black Piece ${i}: x=${piece.x}, y=${piece.y}, ` +
-                    `top-left=(${piece.x}, ${piece.y}), ` +
-                    `bottom-right=(${piece.x + pieceSize}, ${piece.y + pieceSize})`);
     }
 
     // Black pieces above the grid
