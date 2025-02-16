@@ -114,6 +114,7 @@ function drawGrid() {
     }
 
     ctx.beginPath();
+    
     ctx.moveTo(centerX, centerY - gridStep);  
     ctx.lineTo(centerX, centerY - gridStep * 3); 
 
@@ -144,8 +145,6 @@ function drawPieces(player) {
         ctx.drawImage(whiteImg, draggedPiece.x, draggedPiece.y, pieceSize, pieceSize);
     }
 }
-
-
 
 function drawBoard() {
     drawGrid();
