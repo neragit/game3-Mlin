@@ -333,6 +333,11 @@ function initializePieces() {
 
     for (let i = 0; i < maxPieces; i++) {
         whiteArray.push({ x: startXWhite + i * (pieceSize + pieceGap), y: startYWhite });
+
+        // Log the piece's coordinates and bounds (top-left and bottom-right)
+        console.log(`Black Piece ${i}: x=${piece.x}, y=${piece.y}, ` +
+                    `top-left=(${piece.x}, ${piece.y}), ` +
+                    `bottom-right=(${piece.x + pieceSize}, ${piece.y + pieceSize})`);
     }
 
     // Black pieces above the grid
@@ -347,6 +352,7 @@ function initializePieces() {
     
     console.log("Current blackArray:", blackArray);
     console.log("Current whiteArray:", whiteArray);
+
 }
 
 function initializeMap(playerArray) {
@@ -1220,6 +1226,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.addEventListener('resize', resizeCanvas);
+
+document.body.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+}, { passive: false });
 
 canvas.addEventListener('pointerdown', handleStart);
 canvas.addEventListener('pointermove', handleMove);
