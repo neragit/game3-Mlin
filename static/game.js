@@ -410,17 +410,18 @@ function updateBoard() {
 
 function resetBoard() {
     console.log("Reseting the board...");
+    initialized = false;
+    whiteOnBoard = 0;
+    blackOnBoard = 0;
+    whiteScore = 0;
+    blackScore = 0;
+    nineStepsDone = false;
+    stepsDone = 0;
+    replacementIndex = 0;
+    
     resizeCanvas();
     preloadImages(() => {
         initializePieces();
-
-        whiteOnBoard = 0;
-        blackOnBoard = 0;
-        whiteScore = 0;
-        blackScore = 0;
-        nineStepsDone = false;
-        stepsDone = 0;
-        replacementIndex = 0;
 
         blackMap = initializeMap(blackArray);
         whiteMap = initializeMap(whiteArray);
