@@ -27,17 +27,6 @@ body {
     z-index: 1;
 }
 
-#score-box {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #start-message,
 #game-over-message,
 #scored-message,
@@ -54,7 +43,11 @@ body {
 }
 
 #score-box {
+    position: absolute;
     top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
