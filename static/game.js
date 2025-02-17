@@ -8,10 +8,9 @@ const maxPieces = 9;
 const pieceSize = 30; 
 const pieceGap = 5; 
 
-let pulseDirection = 1;
-let maxBlur = 30;
+let blurAmount = 5;
+let maxBlur = 20;
 let minBlur = 5;
-let pulseSpeed = 0.2;
 
 const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
 const piecePadding = isPC ? 0 : 10;
@@ -1051,8 +1050,8 @@ function addGlow() {
     if (isSelecting) {
         ctx.shadowColor = "#FF0040";
         ctx.shadowBlur = blurAmount;
-        ctx.shadowOffsetX = 0;  
-        ctx.shadowOffsetY = 0;  
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
 
         if (!pieceImages["black"]) {
             return;
@@ -1067,20 +1066,19 @@ function addGlow() {
         ctx.shadowColor = "transparent";
         ctx.shadowBlur = 0;
 
-        if (pulseDirection === 1) {
-            blurAmount += pulseSpeed;
-            if (blurAmount >= maxBlur) {
-                pulseDirection--;
+        anime({
+            targets: this,
+            blurAmount: [minBlur, maxBlur],
+            duration: 1000,
+            easing: 'easeInOutSine',
+            loop: true,
+            direction: 'alternate',
+            update: function() {
+                ctx.shadowBlur = blurAmount;
             }
-        } else {
-            blurAmount -= pulseSpeed;
-            if (blurAmount <= minBlur) {
-                pulseDirection++;
-            }
-        }
+        });
     }
 }
-
 
 function checkGameOver() {
     if (blackArray.length === 2) {
