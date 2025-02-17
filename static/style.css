@@ -40,51 +40,6 @@ body {
     z-index: 9999;
 }
 
-#scored-message,
-.phase-message-item {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 30px;
-    border-radius: 10px;
-    z-index: 9999;
-}
-
-#score-box {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.white-score {
-    color: white;
-    margin-right: 15px;
-}
-
-.black-score {
-    color: black;
-}
-
-#scored-message p,
-.phase-message-item p {
-    margin: 0;
-    font-size: 18px;
-}
-
-#scored-message[hidden],
-.phase-message-item[hidden] {
-    display: none;
-}
-
 #start-message,
 #game-over-message {
     top: 50%;
@@ -105,6 +60,51 @@ body {
 #start-message button:hover,
 #game-over-message button:hover {
     background-color: #45a049;
+}
+
+#scored-message,
+.phase-message {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    z-index: 9999;
+}
+
+#scored-message p,
+.phase-message p {
+    margin: 0;
+    font-size: 18px;
+}
+
+#scored-message[hidden],
+.phase-message[hidden] {
+    display: none;
+}
+
+#score-box {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.white-score {
+    color: white;
+    margin-right: 15px;
+}
+
+.black-score {
+    color: black;
 }
 
 #invalid-message {
