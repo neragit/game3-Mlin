@@ -844,6 +844,7 @@ function addStreakToSet(streakSet, positions, isBlack) {
         } else {
             whiteScore++;
             console.log(`whiteScore++, new score: ${whiteScore}`);
+            addGlow(); 
             removePiece("white");  // Remove a white piece
             messageScored("white");
         }
@@ -985,7 +986,6 @@ function removePiece(player) {
     } else if (player === "white") {
         console.log(`Wait for selection...`);
         isSelecting = true; // allow selection from blackArray
-        addGlow(); 
     }
 }
 
@@ -1046,7 +1046,7 @@ function addGlow() {
     console.log(`Adding glow...`);
 
     ctx.shadowColor = "#FF1493";
-    ctx.shadowBlur = 80;
+    ctx.shadowBlur = 50;
 
     blackArray.forEach(piece => {
         if (piece !== draggedPiece) {
