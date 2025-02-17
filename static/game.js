@@ -1043,6 +1043,7 @@ function streak() {
 }
 
 function addGlowToBlackPieces() {
+    console.log(`Adding glow...`);
     blackArray.forEach(piece => {
         const pieceElement = document.querySelector(`#piece-${piece.row}-${piece.col}`);
         if (pieceElement) {
