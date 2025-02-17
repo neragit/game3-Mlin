@@ -1053,19 +1053,9 @@ function addGlow() {
             ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
         }
     });
-}
 
-function removeGlow() {
-    console.log(`Removing glow...`);
-    
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
-
-    blackArray.forEach(piece => {
-        if (piece !== draggedPiece) {
-            ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
-        }
-    });
 }
 
 
@@ -1170,7 +1160,6 @@ function handleStart(e) {
                 console.log(`Removing from array...`);
                 removeFromArray(row, col, "black");
                 isSelecting = false;
-                removeGlow();
             }
         } else {
             console.log("Error: Must select a black piece.");
