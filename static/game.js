@@ -985,6 +985,7 @@ function removePiece(player) {
     } else if (player === "white") {
         console.log(`Wait for selection...`);
         isSelecting = true; // allow selection from blackArray
+        addGlowToBlackPieces(); 
     }
 }
 
@@ -1039,6 +1040,24 @@ function streak() {
     updateScore();
     updateBoard();
     updateGrid();
+}
+
+function addGlowToBlackPieces() {
+    blackArray.forEach(piece => {
+        const pieceElement = document.querySelector(`#piece-${piece.row}-${piece.col}`);
+        if (pieceElement) {
+            pieceElement.classList.add('neon-glow');
+        }
+    });
+}
+
+function removeGlowFromBlackPieces() {
+    blackArray.forEach(piece => {
+        const pieceElement = document.querySelector(`#piece-${piece.row}-${piece.col}`);
+        if (pieceElement) {
+            pieceElement.classList.remove('neon-glow');
+        }
+    });
 }
 
 function checkGameOver() {
@@ -1142,7 +1161,7 @@ function handleStart(e) {
                 console.log(`Removing from array...`);
                 removeFromArray(row, col, "black");
                 isSelecting = false;
-                console.log(`Stop selecting.`);
+                removeGlowFromBlackPieces();
             }
         } else {
             console.log("Error: Must select a black piece.");
