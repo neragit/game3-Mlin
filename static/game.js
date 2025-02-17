@@ -1047,7 +1047,9 @@ function addGlow() {
         console.log(`Adding glow...`);
     
         ctx.shadowColor = "#FF0040";
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 0;  
+        ctx.shadowOffsetY = 0;  
     
         if (!pieceImages["black"]) {
             console.error("Image for 'black' is not loaded or is undefined!");
