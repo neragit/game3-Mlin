@@ -1044,22 +1044,30 @@ function streak() {
 
 function addGlowToBlackPieces() {
     console.log(`Adding glow...`);
+
+    ctx.shadowColor = "#FF1493";
+    ctx.shadowBlur = 20;
+
     blackArray.forEach(piece => {
-        const pieceElement = document.querySelector(`#piece-${piece.row}-${piece.col}`);
-        if (pieceElement) {
-            pieceElement.classList.add('neon-glow');
+        if (piece !== draggedPiece) {
+            ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
+        }
+    });
+
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+}
+
+function removeGlowFromBlackPieces() {
+    console.log(`Removing glow...`);
+
+    blackArray.forEach(piece => {
+        if (piece !== draggedPiece) {
+            ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
         }
     });
 }
 
-function removeGlowFromBlackPieces() {
-    blackArray.forEach(piece => {
-        const pieceElement = document.querySelector(`#piece-${piece.row}-${piece.col}`);
-        if (pieceElement) {
-            pieceElement.classList.remove('neon-glow');
-        }
-    });
-}
 
 function checkGameOver() {
     if (blackArray.length === 2) {
