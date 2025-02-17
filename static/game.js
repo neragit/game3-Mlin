@@ -1047,11 +1047,6 @@ function streak() {
     updateGrid();
 }
 
-let pulseDirection = 1;  // Controls the direction of the pulsation (grow/shrink)
-let maxBlur = 30;        // Maximum blur for the pulsation
-let minBlur = 5;         // Minimum blur for the pulsation
-let pulseSpeed = 0.2;    // Speed of the pulsation (lower is slower)
-
 function addGlow() {
     if (isSelecting) {
 
