@@ -1049,39 +1049,38 @@ function streak() {
 
 function addGlow() {
     if (isSelecting) {
-
         ctx.shadowColor = "#FF0040";
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        
-        ctx.shadowBlur = minBlur + pulseDirection * (maxBlur - minBlur);
+        ctx.shadowBlur = blurAmount;
+        ctx.shadowOffsetX = 0;  
+        ctx.shadowOffsetY = 0;  
 
         if (!pieceImages["black"]) {
-            console.error("Image for 'black' is not loaded or is undefined!");
             return;
         }
 
-        blackArray.forEach((piece, index) => {
-            console.log(`Processing piece ${index} at position (${piece.x}, ${piece.y})`);
-            
+        blackArray.forEach((piece) => {
             if (piece !== draggedPiece) {
                 ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
-            } else {
-                console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
             }
         });
 
         ctx.shadowColor = "transparent";
         ctx.shadowBlur = 0;
 
-        pulseDirection += pulseSpeed;
-        if (pulseDirection > 1 || pulseDirection < 0) {
-            pulseSpeed = -pulseSpeed;
+        if (pulseDirection === 1) {
+            blurAmount += pulseSpeed;
+            if (blurAmount >= maxBlur) {
+                pulseDirection--;
+            }
+        } else {
+            blurAmount -= pulseSpeed;
+            if (blurAmount <= minBlur) {
+                pulseDirection++;
+            }
         }
-
-        requestAnimationFrame(addGlow);
     }
 }
+
 
 function checkGameOver() {
     if (blackArray.length === 2) {
