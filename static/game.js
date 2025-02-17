@@ -985,7 +985,7 @@ function removePiece(player) {
     } else if (player === "white") {
         console.log(`Wait for selection...`);
         isSelecting = true; // allow selection from blackArray
-        addGlowToBlackPieces(); 
+        addGlow(); 
     }
 }
 
@@ -1042,24 +1042,24 @@ function streak() {
     updateGrid();
 }
 
-function addGlowToBlackPieces() {
+function addGlow() {
     console.log(`Adding glow...`);
 
     ctx.shadowColor = "#FF1493";
-    ctx.shadowBlur = 20;
+    ctx.shadowBlur = 80;
 
     blackArray.forEach(piece => {
         if (piece !== draggedPiece) {
             ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
         }
     });
-
-    ctx.shadowColor = "transparent";
-    ctx.shadowBlur = 0;
 }
 
-function removeGlowFromBlackPieces() {
+function removeGlow() {
     console.log(`Removing glow...`);
+    
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
 
     blackArray.forEach(piece => {
         if (piece !== draggedPiece) {
@@ -1170,7 +1170,7 @@ function handleStart(e) {
                 console.log(`Removing from array...`);
                 removeFromArray(row, col, "black");
                 isSelecting = false;
-                removeGlowFromBlackPieces();
+                removeGlow();
             }
         } else {
             console.log("Error: Must select a black piece.");
