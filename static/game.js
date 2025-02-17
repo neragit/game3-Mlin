@@ -1048,6 +1048,10 @@ function addGlow() {
     ctx.shadowColor = "#FF00FF";
     ctx.shadowBlur = 80;
 
+    console.log("Drawing BLUE1 rectangle with glow...");
+    ctx.fillStyle = "blue";  // Color for the rectangle
+    ctx.fillRect(100, 100, 150, 150);  // Position and size of the rectangle
+
     if (!pieceImages["black"]) {
         console.error("Image for 'black' is not loaded or is undefined!");
         return;
@@ -1063,6 +1067,10 @@ function addGlow() {
             console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
         }
     });
+
+    console.log("Drawing RED2 rectangle with glow...");
+    ctx.fillStyle = "red";  // Color for the rectangle
+    ctx.fillRect(100, 100, 150, 150);  // Position and size of the rectangle
 
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
