@@ -771,9 +771,11 @@ function aiJumps(grid) {
 // Selects a strategy
 
 function aiMove() {
+    console.log("CHECKING PHASE...");
     findThreat(grid);
     if (!nineStepsDone && stepsDone === 9) {
         nineStepsDone = true;
+        console.log("Showing phase2 message");
         const phase2Message = document.getElementById('phase2');
         phase2Message.hidden = false;
 
@@ -784,6 +786,7 @@ function aiMove() {
 
     if (nineStepsDone) {
         checkPhase3();
+        console.log("Showing phase3 message");
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
             restrictedMove();
             aiRestrictedMove(grid);
