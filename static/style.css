@@ -130,6 +130,15 @@ body {
     z-index: 9998;
 }
 
+.neon-glow {
+    box-shadow: 0 0 10px 5px neon-pink;
+    transition: box-shadow 0.3s ease;
+}
+
+.neon-glow:hover {
+    box-shadow: 0 0 15px 8px neon-pink;
+}
+
 #fireworksCanvas {
     position: fixed;
     top: 0;
