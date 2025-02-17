@@ -1045,8 +1045,8 @@ function streak() {
 function addGlow() {
     console.log(`Adding glow...`);
 
-    ctx.shadowColor = "#FF1493";
-    ctx.shadowBlur = 50;
+    ctx.shadowColor = "#FF00FF";
+    ctx.shadowBlur = 80;
 
     blackArray.forEach(piece => {
         if (piece !== draggedPiece) {
