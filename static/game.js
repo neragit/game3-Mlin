@@ -984,7 +984,6 @@ function removePiece(player) {
         }
     } else if (player === "white") {
         console.log(`Wait for selection...`);
-        addGlow(); 
         isSelecting = true; // allow selection from blackArray
     }
 }
@@ -1039,6 +1038,7 @@ function streak() {
 
     updateScore();
     updateBoard();
+    addGlow(); 
     updateGrid();
 }
 
