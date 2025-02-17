@@ -445,14 +445,19 @@ function startMessage() {
 
 function checkPhase3() {
     if (whiteOnBoard === 3 || blackOnBoard === 3) {
+        const phaseMessageContainer = document.querySelector('.phase-message');
         const phase3Message = document.getElementById('phase3');
+        phaseMessageContainer.hidden = false;
         phase3Message.hidden = false;
 
         setTimeout(() => {
+            phaseMessageContainer.hidden = true;
             phase3Message.hidden = true;
         }, 3000);
     }
 }
+
+
 
 function initializeGame() {
     resizeCanvas();
@@ -776,10 +781,13 @@ function aiMove() {
     if (!nineStepsDone && stepsDone === 9) {
         nineStepsDone = true;
         console.log("Showing phase2 message");
+        const phaseMessageContainer = document.querySelector('.phase-message');
         const phase2Message = document.getElementById('phase2');
+        phaseMessageContainer.hidden = false;
         phase2Message.hidden = false;
 
         setTimeout(() => {
+            phaseMessageContainer.hidden = true;
             phase2Message.hidden = true;
         }, 3000);
     }
