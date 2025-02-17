@@ -839,13 +839,12 @@ function addStreakToSet(streakSet, positions, isBlack) {
         if (isBlack) {
             blackScore++;
             console.log(`blackScore++, new score: ${blackScore}`);
-            removePiece("black");  // Remove a black piece
+            removePiece("black");
             messageScored("black");
         } else {
             whiteScore++;
             console.log(`whiteScore++, new score: ${whiteScore}`);
-            addGlow(); 
-            removePiece("white");  // Remove a white piece
+            removePiece("white");
             messageScored("white");
         }
     }
@@ -985,6 +984,7 @@ function removePiece(player) {
         }
     } else if (player === "white") {
         console.log(`Wait for selection...`);
+        addGlow(); 
         isSelecting = true; // allow selection from blackArray
     }
 }
