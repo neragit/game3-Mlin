@@ -8,6 +8,11 @@ const maxPieces = 9;
 const pieceSize = 30; 
 const pieceGap = 5; 
 
+let pulseDirection = 1;
+let maxBlur = 30;
+let minBlur = 5;
+let pulseSpeed = 0.2;
+
 const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
 const piecePadding = isPC ? 0 : 10;
 
@@ -1042,33 +1047,44 @@ function streak() {
     updateGrid();
 }
 
+let pulseDirection = 1;  // Controls the direction of the pulsation (grow/shrink)
+let maxBlur = 30;        // Maximum blur for the pulsation
+let minBlur = 5;         // Minimum blur for the pulsation
+let pulseSpeed = 0.2;    // Speed of the pulsation (lower is slower)
+
 function addGlow() {
     if (isSelecting) {
-        console.log(`Adding glow...`);
-    
+
         ctx.shadowColor = "#FF0040";
-        ctx.shadowBlur = 5;
-        ctx.shadowOffsetX = 0;  
-        ctx.shadowOffsetY = 0;  
-    
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        ctx.shadowBlur = minBlur + pulseDirection * (maxBlur - minBlur);
+
         if (!pieceImages["black"]) {
             console.error("Image for 'black' is not loaded or is undefined!");
             return;
         }
-    
+
         blackArray.forEach((piece, index) => {
             console.log(`Processing piece ${index} at position (${piece.x}, ${piece.y})`);
             
             if (piece !== draggedPiece) {
-                console.log(`Drawing piece ${index} at position (${piece.x}, ${piece.y})`);
                 ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
             } else {
                 console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
             }
         });
-    
+
         ctx.shadowColor = "transparent";
         ctx.shadowBlur = 0;
+
+        pulseDirection += pulseSpeed;
+        if (pulseDirection > 1 || pulseDirection < 0) {
+            pulseSpeed = -pulseSpeed;
+        }
+
+        requestAnimationFrame(addGlow);
     }
 }
 
