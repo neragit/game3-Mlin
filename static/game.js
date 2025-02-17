@@ -1048,9 +1048,19 @@ function addGlow() {
     ctx.shadowColor = "#FF00FF";
     ctx.shadowBlur = 80;
 
-    blackArray.forEach(piece => {
+    if (!pieceImages["black"]) {
+        console.error("Image for 'black' is not loaded or is undefined!");
+        return;
+    }
+
+    blackArray.forEach((piece, index) => {
+        console.log(`Processing piece ${index} at position (${piece.x}, ${piece.y})`);
+        
         if (piece !== draggedPiece) {
+            console.log(`Drawing piece ${index} at position (${piece.x}, ${piece.y})`);
             ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
+        } else {
+            console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
         }
     });
 
