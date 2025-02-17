@@ -1043,39 +1043,32 @@ function streak() {
 }
 
 function addGlow() {
-    console.log(`Adding glow...`);
-
-    ctx.shadowColor = "#FF00FF";
-    ctx.shadowBlur = 80;
-
-    console.log("Drawing BLUE1 rectangle with glow...");
-    ctx.fillStyle = "blue";  // Color for the rectangle
-    ctx.fillRect(100, 100, 150, 150);  // Position and size of the rectangle
-
-    if (!pieceImages["black"]) {
-        console.error("Image for 'black' is not loaded or is undefined!");
-        return;
-    }
-
-    blackArray.forEach((piece, index) => {
-        console.log(`Processing piece ${index} at position (${piece.x}, ${piece.y})`);
-        
-        if (piece !== draggedPiece) {
-            console.log(`Drawing piece ${index} at position (${piece.x}, ${piece.y})`);
-            ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
-        } else {
-            console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
+    if (isSelecting) {
+        console.log(`Adding glow...`);
+    
+        ctx.shadowColor = "#FF00FF";
+        ctx.shadowBlur = 20;
+    
+        if (!pieceImages["black"]) {
+            console.error("Image for 'black' is not loaded or is undefined!");
+            return;
         }
-    });
-
-    console.log("Drawing RED2 rectangle with glow...");
-    ctx.fillStyle = "red";  // Color for the rectangle
-    ctx.fillRect(100, 100, 150, 150);  // Position and size of the rectangle
-
-    ctx.shadowColor = "transparent";
-    ctx.shadowBlur = 0;
+    
+        blackArray.forEach((piece, index) => {
+            console.log(`Processing piece ${index} at position (${piece.x}, ${piece.y})`);
+            
+            if (piece !== draggedPiece) {
+                console.log(`Drawing piece ${index} at position (${piece.x}, ${piece.y})`);
+                ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
+            } else {
+                console.log(`Skipping dragged piece at position (${piece.x}, ${piece.y})`);
+            }
+        });
+    
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+    }
 }
-
 
 function checkGameOver() {
     if (blackArray.length === 2) {
