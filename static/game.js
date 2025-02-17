@@ -9,7 +9,7 @@ const pieceSize = 30;
 const pieceGap = 5; 
 
 let blurAmount = 5;
-let maxBlur = 20;
+let maxBlur = 30;
 let minBlur = 5;
 
 const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
