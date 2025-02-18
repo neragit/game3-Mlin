@@ -1297,6 +1297,7 @@ function handleEnd(e) {
             } else {
                 console.error("Invalid move: oldRow and oldCol do not match.");
                 messageInvalid(newRow, newCol);
+                drawPieces("white"); 
                 return;
             }
         } else {
