@@ -1213,7 +1213,7 @@ function handleStart(e) {
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
                 restrictedMove("white");
-                console.log("White possible moves:", possibleMoves);
+                console.log("White possible moves MAP:", moveMap);
                 
                 if (possibleMoves.length === 0) {
                     console.error("No valid restricted move found.");
