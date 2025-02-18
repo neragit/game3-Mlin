@@ -664,7 +664,6 @@ function aiMoveFree() {
 function restrictedMove(player) {
     let possibleMoves = [];
     
-    // Use the appropriate check function based on the player
     const isPlayer = player === "black" ? isBlack : isWhite;
 
     for (let row = 0; row < 7; row++) {
@@ -1252,7 +1251,7 @@ function handleEnd(e) {
         return;
     }
 
-    if (whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
         restrictedMove("white");
         const isMoveValid = possibleMoves.some(move => move.newRow === newRow && move.newCol === newCol);
         if (!isMoveValid) {
