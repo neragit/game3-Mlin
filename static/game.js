@@ -663,6 +663,7 @@ function aiMoveFree() {
 
 function restrictedMove(player) {
     possibleMoves = [];
+    moveMap = {};
     
     const isPlayer = player === "black" ? isBlack : isWhite;
 
@@ -1260,7 +1261,7 @@ function handleEnd(e) {
             return;
         }
         
-        const isMoveValid = possibleMoves.some(move => move.newRow === newRow && move.newCol === newCol);
+        const isMoveValid = moveMap[`${newRow},${newCol}`];
         if (!isMoveValid) {
             messageInvalid(newRow, newCol);
             return;
