@@ -1287,6 +1287,7 @@ function handleEnd(e) {
 
     if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
         const moveKey = `${newRow},${newCol}`;
+        console.log(`Checking moveKey: ${moveKey}`);
 
         if (!moveMap[moveKey]) {
             console.error("Invalid move selected.");
