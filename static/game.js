@@ -1228,8 +1228,11 @@ function handleStart(e) {
                     // Check if the move is valid by comparing the oldNode position with the moveMap
                     for (let move in moveMap) {
                         const { oldRow, oldCol } = moveMap[move];
+                        console.log(`Checking move: move=${move}, oldRow=${oldRow}, oldCol=${oldCol}`);
 
                         if (oldNode.row === !null && oldNode.col === !null) {
+                            console.log(`Comparing oldNode: row=${oldNode.row}, col=${oldNode.col} with move: row=${oldRow}, col=${oldCol}`);
+
                             if (oldNode.row === oldRow && oldNode.col === oldCol) {
                                 console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
                                 validMove = true;
