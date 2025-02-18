@@ -1289,8 +1289,18 @@ function handleEnd(e) {
         const moveKey = `${newRow},${newCol}`;
         console.log(`Checking moveKey: ${moveKey}`);
 
-        if (!moveMap[moveKey]) {
-            console.error("Invalid move selected.");
+        const move = moveMap[moveKey];
+        if (move) {
+            const { oldRow, oldCol } = move;
+            if (oldRow === oldNode.row && oldCol === oldNode.col) {
+                console.log("Valid move: Matching oldRow and oldCol.");
+            } else {
+                console.error("Invalid move: oldRow and oldCol do not match.");
+                messageInvalid(newRow, newCol);
+                return;
+            }
+        } else {
+            console.error("Invalid move: moveKey does not exist in moveMap.");
             messageInvalid(newRow, newCol);
             return;
         }
