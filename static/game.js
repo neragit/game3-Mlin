@@ -1212,7 +1212,7 @@ function handleStart(e) {
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
                 console.log(`nineStepsDone:`, nineStepsDone);
-                console.log(`whiteOnBoard:`, nineStepsDone);
+                console.log(`whiteOnBoard:`, whiteOnBoard);
 
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
@@ -1223,17 +1223,12 @@ function handleStart(e) {
                     checkGameOver();
                     
                 } else {
-                    let validMove = false;
                     for (let move in moveMap) {
-                        const { oldRow, oldCol, newRow, newCol } = moveMap[move];
-                        // Ensure we're working with defined grid coordinates
-                        if (oldRow !== undefined && oldCol !== undefined && newRow !== undefined && newCol !== undefined) {
-                            if (oldNode.row === oldRow && oldNode.col === oldCol) {
-                                if (newRow === clickedRow && newCol === clickedCol) {
-                                    validMove = true;
-                                    break;
-                                }
-                            }
+                        const { oldRow, oldCol } = moveMap[move];
+                        if (oldNode.row === oldRow && oldNode.col === oldCol) {
+                            console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
+                            validMove = true;
+                            break;
                         }
                     }
 
