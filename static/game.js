@@ -1211,6 +1211,8 @@ function handleStart(e) {
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+                console.log(`nineStepsDone:`, nineStepsDone);
+                console.log(`whiteOnBoard:`, nineStepsDone);
 
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
@@ -1237,7 +1239,7 @@ function handleStart(e) {
 
                     if (!validMove) {
                         console.error("Invalid move selected.");
-                        messageInvalid(oldRow.row, oldCol.col);
+                        messageInvalid(oldNode.row, oldNode.col);
                         return;
                     } else {
                         console.log("Valid move made.");
