@@ -526,7 +526,7 @@ function updateArray(x, y, player, oldRow = null, oldCol = null, draggedPiece = 
 }
 
 function clearNode(row, col) {
-    if (grid[row][col] !== 0) {
+    if (!(isEmpty(row, col) || isBlocked(row, col))) {
         grid[row][col] = 0;
         console.log(`Cleared cell [${row}, ${col}]!`);
     } else {
