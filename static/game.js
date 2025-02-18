@@ -41,6 +41,7 @@ let sandClock = false;
 let nineStepsDone = false;
 let blackStepsDone = 0;
 let whiteStepsDone = 0;
+let gameOver = null;
 
 let possibleThreats = [];
 let possibleMoves = [];
@@ -725,7 +726,8 @@ function aiRestrictedMove() {
 
     if (validMoves.length === 0) {
         console.error("No valid restricted move found.");
-        return;
+        gameOver = "black";
+        checkGameOver();
     }
 
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
@@ -1093,11 +1095,11 @@ function addGlow() {
 }
 
 function checkGameOver() {
-    if (blackArray.length === 2) {
+    if (blackArray.length === 2 || gameOver === "black") {
         displayGameOver("Congratulations! White wins!");
     }
 
-    if (whiteArray.length === 2) {
+    if (whiteArray.length === 2 || gameOver === "white") {
         displayGameOver("Better luck next time! Black wins!");
     }
 }
@@ -1210,7 +1212,16 @@ function handleStart(e) {
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
-            
+
+            if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+                restrictedMove("white");
+                console.log("White possible moves:", possibleMoves);
+                
+                if (possibleMoves.length === 0) {
+                    console.error("No valid restricted move found.");
+                    gameOver = "white";
+                }
+            }
         } else {
             console.log("Error: No white piece selected.");
         }
@@ -1252,15 +1263,7 @@ function handleEnd(e) {
         return;
     }
 
-    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
-        restrictedMove("white");
-        console.log("White possible moves:", possibleMoves);
-        
-        if (possibleMoves.length === 0) {
-            console.error("No valid restricted move found.");
-            return;
-        }
-        
+    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {       
         const isMoveValid = moveMap[`${newRow},${newCol}`];
         if (!isMoveValid) {
             messageInvalid(newRow, newCol);
