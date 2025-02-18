@@ -1223,20 +1223,21 @@ function handleStart(e) {
                 } else {
                     let validMove = false;
                     for (let move in moveMap) {
-                        const { oldRow, oldCol } = moveMap[move];
-                        // Check if clicked destination matches any of the valid move spots in the map
-                        if (oldNode.row === oldRow && oldNode.col === oldCol) {
-                            const { newRow, newCol } = moveMap[move];
-                            if (newRow === clickedPiece.x && newCol === clickedPiece.y) {
-                                validMove = true;
-                                break;
+                        const { oldRow, oldCol, newRow, newCol } = moveMap[move];
+                        // Ensure we're working with defined grid coordinates
+                        if (oldRow !== undefined && oldCol !== undefined && newRow !== undefined && newCol !== undefined) {
+                            if (oldNode.row === oldRow && oldNode.col === oldCol) {
+                                if (newRow === clickedRow && newCol === clickedCol) {
+                                    validMove = true;
+                                    break;
+                                }
                             }
                         }
                     }
 
                     if (!validMove) {
                         console.error("Invalid move selected.");
-                        messageInvalid(oldRow, oldCol);
+                        messageInvalid(oldRow.row, oldCol.col);
                         return;
                     } else {
                         console.log("Valid move made.");
