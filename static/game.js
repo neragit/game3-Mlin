@@ -1287,14 +1287,6 @@ function handleEnd(e) {
         return;
     }
 
-    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {       
-        const isMoveValid = moveMap[`${newRow},${newCol}`];
-        if (!isMoveValid) {
-            messageInvalid(newRow, newCol);
-            return;
-        }
-    }
-
     console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
 
     if (oldNode) {
