@@ -1229,11 +1229,12 @@ function handleStart(e) {
                     for (let move in moveMap) {
                         const { oldRow, oldCol } = moveMap[move];
 
-                        // Ensure the oldNode position matches an adjacent position
-                        if (oldNode.row === oldRow && oldNode.col === oldCol) {
-                            console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
-                            validMove = true;
-                            break;
+                        if (oldNode.row === !null && oldNode.col === !null) {
+                            if (oldNode.row === oldRow && oldNode.col === oldCol) {
+                                console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
+                                validMove = true;
+                                break;
+                            }
                         }
                     }
 
