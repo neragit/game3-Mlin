@@ -799,7 +799,7 @@ function aiMove() {
     }
 
     if (nineStepsDone) {
-        if (phase3 = false && ( whiteOnBoard === 3 || blackOnBoard === 3 )) {
+        if (!phase3 && ( whiteOnBoard === 3 || blackOnBoard === 3 )) {
             phase3 = true;
             checkPhase3();
             console.log("Showing phase3 message");
@@ -1068,8 +1068,7 @@ function addGlow() {
             }
         });
 
-        ctx.shadowColor = "transparent";
-        ctx.shadowBlur = 0;
+        updateGrid();
 
         anime({
             targets: this,
@@ -1082,6 +1081,9 @@ function addGlow() {
                 ctx.shadowBlur = blurAmount;
             }
         });
+
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
     }
 }
 
