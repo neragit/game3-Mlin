@@ -62,6 +62,14 @@ body {
     background-color: #45a049;
 }
 
+@media (max-width: 768px) { 
+    #start-message,
+    #game-over-message {
+        width: 90%;
+        height: auto;
+    }
+}
+
 #scored-message,
 .phase-message {
     position: absolute;
