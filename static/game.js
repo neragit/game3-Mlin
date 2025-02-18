@@ -1236,6 +1236,8 @@ function handleStart(e) {
 
                     if (!validMove) {
                         console.error("Invalid move selected.");
+                        messageInvalid();
+                        return;
                     } else {
                         console.log("Valid move made.");
                     }
