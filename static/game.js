@@ -25,6 +25,8 @@ let replacementIndex = 0;
 let whiteOnBoard = 0;
 let blackOnBoard = 0;
 
+let phase3 = false;
+
 let blackStreaksCount = 0;
 let whiteStreaksCount = 0;
 
@@ -206,19 +208,18 @@ function resizeCanvas() {
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
 
-    gridSize = Math.min(canvas.width, canvas.height) / 2;
+    if (window.innerWidth <= 768) {
+        gridSize = Math.min(canvas.width, canvas.height) / 1.5;
+    } else {
+        gridSize = Math.min(canvas.width, canvas.height) / 2;
+    }
+
     gridStep = gridSize / 6;
 
     if (initialized) {
-        console.log("Updating coordinates...");
         updateCoordinates();
-
-        console.log("black after :", blackArray);
-        console.log("black after :", blackMap);
-        console.log("Redrawing board...");
-        
     }
-    
+
     drawBoard();
 }
 
@@ -462,7 +463,7 @@ function checkPhase2() {
 }
 
 function checkPhase3() {
-    if (whiteOnBoard === 3 || blackOnBoard === 3) {
+    if (phase3 = true) {
         const phaseMessageContainer = document.querySelector('.phase-message');
         const phase3Message = document.getElementById('phase3');
         phaseMessageContainer.hidden = false;
@@ -798,8 +799,10 @@ function aiMove() {
     }
 
     if (nineStepsDone) {
-        checkPhase3();
-        console.log("Showing phase3 message");
+        if (phase3 = false && ( whiteOnBoard === 3 || blackOnBoard === 3 )) {
+            phase3 = true;
+            checkPhase3();
+            console.log("Showing phase3 message");
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
             restrictedMove();
             aiRestrictedMove(grid);
@@ -1057,7 +1060,8 @@ function addGlow() {
             return;
         }
 
-        blackArray.forEach((piece) => {
+        // Draw only pieces whose index is less than the replacementIndex
+        blackArray.slice(0, replacementIndex).forEach((piece) => {
             if (piece !== draggedPiece) {
                 ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
             }
