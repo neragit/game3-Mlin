@@ -662,7 +662,7 @@ function aiMoveFree() {
 // Phase 2
 
 function restrictedMove(player) {
-    let possibleMoves = [];
+    possibleMoves = [];
     
     const isPlayer = player === "black" ? isBlack : isWhite;
 
@@ -1253,6 +1253,13 @@ function handleEnd(e) {
 
     if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
         restrictedMove("white");
+        console.log("White possible moves:", possibleMoves);
+        
+        if (possibleMoves.length === 0) {
+            console.error("No valid restricted move found.");
+            return;
+        }
+        
         const isMoveValid = possibleMoves.some(move => move.newRow === newRow && move.newCol === newCol);
         if (!isMoveValid) {
             messageInvalid(newRow, newCol);
