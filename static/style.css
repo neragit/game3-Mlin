@@ -64,7 +64,9 @@ body {
 
 @media (max-width: 768px) { 
     #start-message,
-    #game-over-message {
+    #game-over-message,
+    #scored-message,
+    .phase-message {
         width: 90%;
         height: auto;
     }
