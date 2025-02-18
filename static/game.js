@@ -1166,6 +1166,40 @@ function getCoordinates(e) {
     return { mouseX, mouseY };
 }
 
+function whiteRestricted(clickedPiece) {
+    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+        restrictedMove("white");
+        console.log("White possible moves MAP:", moveMap);
+
+        if (possibleMoves.length === 0) {
+            console.error("No valid restricted move found.");
+            gameOver = "white";
+            return false;
+        }
+
+        let validMove = false;
+        for (let move in moveMap) {
+            const { oldRow, oldCol } = moveMap[move];
+            if (oldNode.row === oldRow && oldNode.col === oldCol) {
+                const { newRow, newCol } = moveMap[move];
+                if (newRow === clickedPiece.x && newCol === clickedPiece.y) {
+                    validMove = true;
+                    break;
+                }
+            }
+        }
+
+        if (!validMove) {
+            console.error("Invalid move selected.");
+            return false;
+        } else {
+            console.log("Valid move made.");
+            return true;
+        }
+    }
+    return false;
+}
+
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
@@ -1186,7 +1220,7 @@ function handleStart(e) {
             if (oldNode) {
                 const { row, col } = oldNode;
                 clearNode(row, col);
-                console.log(`Removing from array...`);
+                console.log("Removing from array...");
                 removeFromArray(row, col, "black");
                 isSelecting = false;
             }
@@ -1202,23 +1236,15 @@ function handleStart(e) {
         );
 
         if (clickedPiece) {
-            isDragging = true;
-            draggedPiece = clickedPiece;
-            mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
-            startX = mouseX;
-            startY = mouseY;
-
-            oldNode = checkNode(clickedPiece.x, clickedPiece.y);
-            console.log(`Dragging started on white piece, oldNode:`, oldNode);
-
-            if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
-                restrictedMove("white");
-                console.log("White possible moves MAP:", moveMap);
-                
-                if (possibleMoves.length === 0) {
-                    console.error("No valid restricted move found.");
-                    gameOver = "white";
-                }
+            if (whiteRestricted(clickedPiece)) {
+                // Only enable dragging if the move was valid
+                isDragging = true;
+                draggedPiece = clickedPiece;
+                mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
+                startX = mouseX;
+                startY = mouseY;
+                oldNode = checkNode(clickedPiece.x, clickedPiece.y);
+                console.log(`Dragging started on white piece, oldNode:`, oldNode);
             }
         } else {
             console.log("Error: No white piece selected.");
