@@ -1231,7 +1231,7 @@ function handleStart(e) {
                         console.log(`Checking move: move=${move}, oldRow=${oldRow}, oldCol=${oldCol}`);
                         console.log(`BEFORE NULL Comparing oldNode: row=${oldNode.row}, col=${oldNode.col} with move: row=${oldRow}, col=${oldCol}`);
 
-                        if (oldNode.row === !null && oldNode.col === !null) {
+                        if (oldNode.row !== null && oldNode.col !== null) {
                             console.log(`AFTER NULL Comparing oldNode: row=${oldNode.row}, col=${oldNode.col} with move: row=${oldRow}, col=${oldCol}`);
 
                             if (oldNode.row === oldRow && oldNode.col === oldCol) {
