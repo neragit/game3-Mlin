@@ -805,7 +805,7 @@ function aiMove() {
     }
 
     if (nineStepsDone) {
-        if (!phase3 && ( whiteOnBoard === 3 || blackOnBoard === 3 )) {
+        if (!phase3 && (blackOnBoard === 3 )) {
             phase3 = true;
             checkPhase3();
             console.log("Showing phase3 message");
@@ -1280,7 +1280,7 @@ function handleEnd(e) {
     updateGrid();
     streak();
 
-    if (!phase3 && whiteOnBoard === 3) {
+    if (nineStepsDone && !phase3 && whiteOnBoard === 3) {
         checkPhase3();
         phase3 = true;
         console.log("Showing phase3 message for white");
