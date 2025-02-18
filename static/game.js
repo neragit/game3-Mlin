@@ -452,7 +452,7 @@ function startMessage() {
 }
 
 function checkPhase2() {
-    if (blackStepsDone === 9 || whiteStepsDone === 9) {
+    if (whiteStepsDone === 9) {
         const phaseMessageContainer = document.querySelector('.phase-message');
         const phase2Message = document.getElementById('phase2');
         phaseMessageContainer.hidden = false;
