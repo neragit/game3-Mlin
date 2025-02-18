@@ -830,7 +830,6 @@ function aiMove() {
     streak();
     updateMap("white");
     toggleSandClock();
-    isWhiteRestricted();
 }
 
 function toggleSandClock() {
@@ -1282,8 +1281,8 @@ function handleEnd(e) {
     streak();
 
     if (!phase3 && whiteOnBoard === 3) {
-        phase3 = true;
         checkPhase3();
+        phase3 = true;
         console.log("Showing phase3 message for white");
     }
 
