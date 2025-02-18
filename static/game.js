@@ -10,7 +10,7 @@ const pieceGap = 5;
 
 let blurAmount = 5;
 let maxBlur = 30;
-let minBlur = 5;
+let minBlur = 10;
 
 const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
 const piecePadding = isPC ? 0 : 10;
@@ -39,7 +39,8 @@ let whiteScore = 0;
 let sandClock = false;
 
 let nineStepsDone = false;
-let stepsDone = 0;
+let blackStepsDone = 0;
+let whiteStepsDone = 0;
 
 let possibleThreats = [];
 let possibleMoves = [];
@@ -421,7 +422,8 @@ function resetBoard() {
     whiteScore = 0;
     blackScore = 0;
     nineStepsDone = false;
-    stepsDone = 0;
+    blackStepsDone = 0;
+    whiteStepsDone = 0;
     replacementIndex = 0;
     
     resizeCanvas();
@@ -449,7 +451,7 @@ function startMessage() {
 }
 
 function checkPhase2() {
-    if (stepsDone === 9) {
+    if (blackStepsDone === 9 || whiteStepsDone === 9) {
         const phaseMessageContainer = document.querySelector('.phase-message');
         const phase2Message = document.getElementById('phase2');
         phaseMessageContainer.hidden = false;
@@ -570,8 +572,8 @@ function messageInvalid(row, col) {
 
 // AI strategy
 
-function findThreat(grid) {
-    possibleThreats = []; // Ensure it's cleared at the start
+function findThreat() {
+    possibleThreats = [];
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
             if (isEmpty(row, col)) {
@@ -621,7 +623,7 @@ function findThreat(grid) {
 
 // Phase 1
 
-function aiMoveFree(grid) {
+function aiMoveFree() {
 
     if (possibleThreats && possibleThreats.length > 0) {
         for (const move of possibleThreats) {
@@ -659,11 +661,15 @@ function aiMoveFree(grid) {
 
 // Phase 2
 
-function restrictedMove(grid) {
-    possibleMoves = [];
+function restrictedMove(player) {
+    let possibleMoves = [];
+    
+    // Use the appropriate check function based on the player
+    const isPlayer = player === "black" ? isBlack : isWhite;
+
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
-            if (isBlack(row, col)) {
+            if (isPlayer(row, col)) {
                 for (let dir in directions) {
                     const [dr, dc] = directions[dir];
                     let r = row;
@@ -695,7 +701,7 @@ function restrictedMove(grid) {
     return possibleMoves;
 }
 
-function aiRestrictedMove(grid) {
+function aiRestrictedMove() {
     console.log(`Making a RESTRICTED move!`);
 
     for (let threat of possibleThreats) {
@@ -749,7 +755,7 @@ function blackRandom() {
 }
 
 
-function aiJumps(grid) {
+function aiJumps() {
 
     if (possibleThreats && possibleThreats.length > 0) {
         // Iterate through all threats and block them
@@ -793,8 +799,8 @@ function aiJumps(grid) {
 // Selects a strategy
 
 function aiMove() {
-    findThreat(grid);
-    if (!nineStepsDone && stepsDone === 9) {
+    findThreat();
+    if (!nineStepsDone && blackStepsDone === 9) {
         nineStepsDone = true;
     }
 
@@ -805,17 +811,17 @@ function aiMove() {
             console.log("Showing phase3 message");
             }
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
-            restrictedMove();
-            aiRestrictedMove(grid);
+            restrictedMove("black");
+            aiRestrictedMove();
         } else if (blackOnBoard < 4) {
-            aiJumps(grid);
+            aiJumps();
         }
     } else {
-        aiMoveFree(grid);
+        aiMoveFree();
     }
 
-    stepsDone++;
-    //console.log("Steps done:", stepsDone, "Nine steps done:", nineStepsDone);
+    blackStepsDone++;
+    //console.log("Steps done:", blackStepsDone, "Nine steps done:", nineStepsDone);
 
     updateBoard(); // after placing/moving black
     updateMap("black");
@@ -824,6 +830,7 @@ function aiMove() {
     streak();
     updateMap("white");
     toggleSandClock();
+    isWhiteRestricted();
 }
 
 function toggleSandClock() {
@@ -973,9 +980,9 @@ function whiteRandom() {
 
         if (spot) {
             const { row, col } = spot;
-            whiteArray.splice(randomIndex, 1);  // Remove the selected piece from the array
+            whiteArray.splice(randomIndex, 1);  // Remove from array
             console.log(`Random white removed from array!`);
-            return { x, y, oldRow: row, oldCol: col };  // Return the valid result immediately
+            return { x, y, oldRow: row, oldCol: col };
         } else {
             console.log(`Spot not chosen. Retrying...`);
         }
@@ -1061,7 +1068,6 @@ function addGlow() {
             return;
         }
 
-        // Draw only pieces whose index is less than the replacementIndex
         blackArray.slice(0, replacementIndex).forEach((piece) => {
             if (piece !== draggedPiece) {
                 ctx.drawImage(pieceImages["black"], piece.x, piece.y, pieceSize, pieceSize);
@@ -1147,9 +1153,6 @@ function restartGame() {
     resetBoard();
 }
 
-
-// Events
-
 function getCoordinates(e) {
     let mouseX = 0;
     let mouseY = 0;
@@ -1164,19 +1167,18 @@ function getCoordinates(e) {
     return { mouseX, mouseY };
 }
 
-// Mouse Down / Touch Start Event
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
-    console.log(`handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
+    console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
     let clickedPiece = null;
 
     if (isSelecting) {
         clickedPiece = blackArray.find(piece =>
-            mouseX >= piece.x &&
-            mouseX <= piece.x + pieceSize + piecePadding &&
-            mouseY >= piece.y &&
-            mouseY <= piece.y + pieceSize + piecePadding
+            mouseX >= piece.x - (pieceSize / 2 + piecePadding) &&
+            mouseX <= piece.x + (pieceSize / 2 + piecePadding) &&
+            mouseY >= piece.y - (pieceSize / 2 + piecePadding) &&
+            mouseY <= piece.y + (pieceSize / 2 + piecePadding)
         );
 
         if (clickedPiece) {
@@ -1194,10 +1196,11 @@ function handleStart(e) {
         }
     } else {
         clickedPiece = whiteArray.find(piece =>
-            mouseX >= piece.x &&
-            mouseX <= piece.x + pieceSize + piecePadding &&
-            mouseY >= piece.y &&
-            mouseY <= piece.y + pieceSize + piecePadding
+            mouseX >= piece.x - (pieceSize / 2 + piecePadding) &&
+            mouseX <= piece.x + (pieceSize / 2 + piecePadding) &&
+            mouseY >= piece.y - (pieceSize / 2 + piecePadding) &&
+            mouseY <= piece.y + (pieceSize / 2 + piecePadding)
+        );
         );
 
         if (clickedPiece) {
@@ -1209,6 +1212,7 @@ function handleStart(e) {
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
+            
         } else {
             console.log("Error: No white piece selected.");
         }
@@ -1216,7 +1220,6 @@ function handleStart(e) {
     console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
 
-// Mouse Move / Touch Move Event
 function handleMove(e) {
     e.preventDefault();
     if (isDragging && draggedPiece) {
@@ -1230,31 +1233,34 @@ function handleMove(e) {
     }
 }
 
-// Mouse Up / Touch End Event
 function handleEnd(e) {
     e.preventDefault();
     if (!isDragging || !draggedPiece) {
-        console.log("handleEnd: Not dragging or no piece to release.");
         return;
     }
 
     isDragging = false;
     const { mouseX, mouseY } = getCoordinates(e);
+    console.log(`CHECKING COORDINATES of handleEnd at: mouseX=${mouseX}, mouseY=${mouseY}`);
 
-    console.log(`handleEnd: mouseX=${mouseX}, mouseY=${mouseY}`);
-
-    // Calculate the new position
     newNode = checkNode(mouseX, mouseY);
     if (!newNode) {
-        console.log("Error: No valid node found for mouse release.");
         return;
     }
 
     const { row: newRow, col: newCol } = newNode;
     if (!isWithinBounds(newRow, newCol) || !isEmpty(newRow, newCol)) {
-        console.error("Target spot is not valid or not empty.");
         messageInvalid(newRow, newCol);
         return;
+    }
+
+    if (whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+        restrictedMove("white");
+        const isMoveValid = possibleMoves.some(move => move.newRow === newRow && move.newCol === newCol);
+        if (!isMoveValid) {
+            messageInvalid(newRow, newCol);
+            return;
+        }
     }
 
     console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
@@ -1269,27 +1275,37 @@ function handleEnd(e) {
     draggedPiece.x = newNode.x;
     draggedPiece.y = newNode.y;
 
-    console.log(`Piece placed at new position: x=${draggedPiece.x}, y=${draggedPiece.y}`);
+    console.log(`PLACED AT: x=${draggedPiece.x}, y=${draggedPiece.y}`);
 
     updateBoard(); // After placing/moving white
     updateMap("white");
     updateGrid();
     streak();
 
+    if (!phase3 && whiteOnBoard === 3) {
+        phase3 = true;
+        checkPhase3();
+        console.log("Showing phase3 message for white");
+    }
+
+    whiteStepsDone++;
+
     const waitingForSelection = setInterval(function() {
         if (!isSelecting) {
             checkPhase2();
             toggleSandClock();
-            clearInterval(waitingForSelection); // Stop the interval once selection is done
+            clearInterval(waitingForSelection);
             setTimeout(() => {
                 aiMove();
-                draggedPiece = null; // Reset dragged piece
+                draggedPiece = null;
             }, 1000);
         } else {
             console.log("AI is waiting for player selection to finish...");
         }
     }, 1000);
 }
+
+// Events
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeGame();
