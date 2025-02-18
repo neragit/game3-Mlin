@@ -803,6 +803,7 @@ function aiMove() {
             phase3 = true;
             checkPhase3();
             console.log("Showing phase3 message");
+            }
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
             restrictedMove();
             aiRestrictedMove(grid);
