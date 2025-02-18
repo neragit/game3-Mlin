@@ -1258,7 +1258,7 @@ function handleMove(e) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
-        updateBoard(); // Redraw board with dragged piece
+        updateBoard();
     }
 }
 
@@ -1297,7 +1297,10 @@ function handleEnd(e) {
             } else {
                 console.error("Invalid move: oldRow and oldCol do not match.");
                 messageInvalid(newRow, newCol);
-                drawPieces("white"); 
+                draggedPiece.x = clickedPiece.x;
+                draggedPiece.y = clickedPiece.y;
+                updateBoard();
+                printMatrix(grid);
                 return;
             }
         } else {
