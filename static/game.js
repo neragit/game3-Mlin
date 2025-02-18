@@ -1159,12 +1159,10 @@ function getCoordinates(e) {
     let mouseY = 0;
 
     const rect = canvas.getBoundingClientRect();
-    console.log(`Canvas bounding rect: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
 
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
 
-    console.log(`getCoordinates: mouseX=${mouseX}, mouseY=${mouseY}`);
     return { mouseX, mouseY };
 }
 
@@ -1233,9 +1231,6 @@ function handleMove(e) {
     e.preventDefault();
     if (isDragging && draggedPiece) {
         const { mouseX, mouseY } = getCoordinates(e);
-
-        console.log(`handleMove: mouseX=${mouseX}, mouseY=${mouseY}, draggedPiece:`, draggedPiece);
-
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
         updateBoard(); // Redraw board with dragged piece
