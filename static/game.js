@@ -48,6 +48,7 @@ let possibleMoves = [];
 let moveMap = {}; // possible restricted moves for black (1 step into an empty spot / from-to pairs)
 
 let isSelecting = false;
+let clickedPiece = null;
 let isDragging = false;
 let draggedPiece = null;
 let mouseOffset = { x: 0, y: 0 };
@@ -1170,7 +1171,6 @@ function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
     console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
-    let clickedPiece = null;
 
     if (isSelecting) {
         clickedPiece = blackArray.find(piece =>
