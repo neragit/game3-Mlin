@@ -19,6 +19,21 @@ body {
     touch-action: none;
 }
 
+@media (max-width: 768px) { 
+    body {
+        background-size: auto 100%;
+        background-position: center;
+    }
+    
+    #start-message,
+    #game-over-message,
+    #scored-message,
+    .phase-message {
+        width: 90%;
+        height: auto;
+    }
+}
+
 #gameCanvas {
     display: block;
     width: 100%;
@@ -60,16 +75,6 @@ body {
 #start-message button:hover,
 #game-over-message button:hover {
     background-color: #45a049;
-}
-
-@media (max-width: 768px) { 
-    #start-message,
-    #game-over-message,
-    #scored-message,
-    .phase-message {
-        width: 90%;
-        height: auto;
-    }
 }
 
 #scored-message,
