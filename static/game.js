@@ -1211,31 +1211,22 @@ function handleStart(e) {
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
-                console.log(`nineStepsDone:`, nineStepsDone);
-                console.log(`whiteOnBoard:`, whiteOnBoard);
 
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
 
                 if (possibleMoves.length === 0) {
-                    console.error("No valid restricted move found.");
                     gameOver = "white";
                     checkGameOver();
                     
                 } else {
                     validMove = false;
 
-                    // Check if the move is valid by comparing the oldNode position with the moveMap
                     for (let move in moveMap) {
                         const { oldRow, oldCol } = moveMap[move];
-                        console.log(`Checking move: move=${move}, oldRow=${oldRow}, oldCol=${oldCol}`);
-                        console.log(`BEFORE NULL Comparing oldNode: row=${oldNode.row}, col=${oldNode.col} with move: row=${oldRow}, col=${oldCol}`);
 
                         if (oldNode.row !== null && oldNode.col !== null) {
-                            console.log(`AFTER NULL Comparing oldNode: row=${oldNode.row}, col=${oldNode.col} with move: row=${oldRow}, col=${oldCol}`);
-
                             if (oldNode.row === oldRow && oldNode.col === oldCol) {
-                                console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
                                 validMove = true;
                                 break;
                             }
@@ -1294,6 +1285,16 @@ function handleEnd(e) {
 
     console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
 
+    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+        const moveKey = `${newRow},${newCol}`;
+
+        if (!moveMap[moveKey]) {
+            console.error("Invalid move selected.");
+            messageInvalid(newRow, newCol);
+            return;
+        }
+    }
+
     if (oldNode) {
         const { row: oldRow, col: oldCol } = oldNode;
         movePlayer(oldRow, oldCol, newRow, newCol, 'white');
@@ -1334,6 +1335,7 @@ function handleEnd(e) {
         }
     }, 1000);
 }
+
 
 // Events
 
