@@ -1211,16 +1211,16 @@ function handleStart(e) {
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
-                // Call restrictedMove("white") to get possible valid moves
+
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
 
-                // Now validate the move by checking if the move corresponds to a valid entry in moveMap
                 if (possibleMoves.length === 0) {
                     console.error("No valid restricted move found.");
                     gameOver = "white";
+                    checkGameOver();
+                    
                 } else {
-                    // Check if the destination clicked by the user is in the moveMap
                     let validMove = false;
                     for (let move in moveMap) {
                         const { oldRow, oldCol } = moveMap[move];
@@ -1236,7 +1236,7 @@ function handleStart(e) {
 
                     if (!validMove) {
                         console.error("Invalid move selected.");
-                        messageInvalid();
+                        messageInvalid(oldRow, oldCol);
                         return;
                     } else {
                         console.log("Valid move made.");
