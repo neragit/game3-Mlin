@@ -452,7 +452,7 @@ function startMessage() {
 }
 
 function checkPhase2() {
-    if (whiteStepsDone === 9) {
+    if (whiteStepsDone === 9 && blackStepsDone === 8) {
         const phaseMessageContainer = document.querySelector('.phase-message');
         const phase2Message = document.getElementById('phase2');
         phaseMessageContainer.hidden = false;
@@ -1223,8 +1223,13 @@ function handleStart(e) {
                     checkGameOver();
                     
                 } else {
+                    validMove = false;
+
+                    // Check if the move is valid by comparing the oldNode position with the moveMap
                     for (let move in moveMap) {
                         const { oldRow, oldCol } = moveMap[move];
+
+                        // Ensure the oldNode position matches an adjacent position
                         if (oldNode.row === oldRow && oldNode.col === oldCol) {
                             console.log(`Match found for oldNode: row=${oldNode.row}, col=${oldNode.col}`);
                             validMove = true;
@@ -1242,15 +1247,14 @@ function handleStart(e) {
                 }
             }
             
-        isDragging = true;
-        
+            isDragging = true;
+            
         } else {
             console.log("Error: No white piece selected.");
         }
     }
     console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
-
 
 function handleMove(e) {
     e.preventDefault();
