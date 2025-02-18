@@ -1201,7 +1201,6 @@ function handleStart(e) {
             mouseY >= piece.y - (pieceSize / 2 + piecePadding) &&
             mouseY <= piece.y + (pieceSize / 2 + piecePadding)
         );
-        );
 
         if (clickedPiece) {
             isDragging = true;
