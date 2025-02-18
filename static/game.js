@@ -1292,6 +1292,7 @@ function handleEnd(e) {
     }
 
     whiteStepsDone++;
+    printMatrix(grid);
 
     const waitingForSelection = setInterval(function() {
         if (!isSelecting) {
