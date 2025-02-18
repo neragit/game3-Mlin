@@ -19,7 +19,7 @@ body {
     touch-action: none;
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 700px) { 
     body {
         background-size: auto 100%;
         background-position: center;
