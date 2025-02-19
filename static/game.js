@@ -1299,6 +1299,7 @@ function handleEnd(e) {
                 messageInvalid(newRow, newCol);
                 draggedPiece.x = clickedPiece.x;
                 draggedPiece.y = clickedPiece.y;
+                console.log(`CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
                 updateBoard();
                 printMatrix(grid);
                 return;
