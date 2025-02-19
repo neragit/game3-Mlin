@@ -1209,7 +1209,7 @@ function handleStart(e) {
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
-            console.log(`00 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}`);
+            console.log(`00 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
 
