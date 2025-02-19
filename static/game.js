@@ -1300,6 +1300,7 @@ function handleEnd(e) {
                 draggedPiece.x = clickedPiece.x;
                 draggedPiece.y = clickedPiece.y;
                 console.log(`CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+                console.log(whiteArray);
                 updateBoard();
                 printMatrix(grid);
                 return;
@@ -1310,6 +1311,7 @@ function handleEnd(e) {
             draggedPiece.x = clickedPiece.x;
             draggedPiece.y = clickedPiece.y;
             console.log(`CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+            console.log(whiteArray);
             updateBoard();
             printMatrix(grid);
             return;
