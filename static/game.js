@@ -665,8 +665,8 @@ function aiMoveFree() {
 
 function restrictedMove(player) {
     possibleMoves = [];
-    moveMap = {};
-    
+    moveMap = {};  // Will store multiple old spots for each destination
+
     const isPlayer = player === "black" ? isBlack : isWhite;
 
     for (let row = 0; row < 7; row++) {
@@ -691,7 +691,15 @@ function restrictedMove(player) {
                         }
 
                         if (isEmpty(r, c)) {
-                            moveMap[`${r},${c}`] = { oldRow: row, oldCol: col };
+                            // Check if moveMap already contains the key
+                            const key = `${r},${c}`;
+                            if (!moveMap[key]) {
+                                moveMap[key] = [];  // Initialize if it's the first time
+                            }
+                            // Add the old position to the list of old spots
+                            moveMap[key].push({ oldRow: row, oldCol: col });
+
+                            // Add the new move to the possible moves list
                             possibleMoves.push({ newRow: r, newCol: c });
                         }
                     }
@@ -702,6 +710,7 @@ function restrictedMove(player) {
 
     return possibleMoves;
 }
+
 
 function aiRestrictedMove() {
     console.log(`Making a RESTRICTED move!`);
