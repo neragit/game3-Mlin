@@ -1202,7 +1202,7 @@ function handleStart(e) {
         );
 
         if (clickedPiece) {
-            draggedPiece = clickedPiece;
+            draggedPiece = { ...clickedPiece };
             mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
             startX = mouseX;
             startY = mouseY;
