@@ -1307,6 +1307,11 @@ function handleEnd(e) {
         } else {
             console.error("Invalid move: moveKey does not exist in moveMap.");
             messageInvalid(newRow, newCol);
+            draggedPiece.x = clickedPiece.x;
+            draggedPiece.y = clickedPiece.y;
+            console.log(`CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+            updateBoard();
+            printMatrix(grid);
             return;
         }
     }
