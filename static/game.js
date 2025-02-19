@@ -1209,6 +1209,7 @@ function handleStart(e) {
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
+            console.log(`00 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}`);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
 
@@ -1258,11 +1259,13 @@ function handleMove(e) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
+        console.log(`01 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
         updateBoard();
     }
 }
 
 function handleEnd(e) {
+    console.log(`02 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
     e.preventDefault();
     if (!isDragging || !draggedPiece) {
         return;
