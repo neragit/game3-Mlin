@@ -816,7 +816,7 @@ function aiMove() {
         nineStepsDone = true;
     }
 
-    if (nineStepsDone) {
+    if (blackStepsDone > 9) {
         if (!phase3 && (blackOnBoard === 3 )) {
             phase3 = true;
             checkPhase3();
@@ -1218,11 +1218,8 @@ function handleStart(e) {
             startY = mouseY;
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
-            console.log(`Dragging started on white piece, oldNode:`, oldNode);
-            console.log(`00 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
-
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
 
@@ -1303,7 +1300,7 @@ function handleEnd(e) {
 
     console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
 
-    if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+    if (whiteStepsDone >= 9 && whiteOnBoard >= 4) {
         const moveKey = `${newRow},${newCol}`;
         console.log(`Checking moveKey: ${moveKey}`);
 
@@ -1362,7 +1359,7 @@ function handleEnd(e) {
     updateGrid();
     streak();
 
-    if (nineStepsDone && !phase3 && whiteOnBoard === 3) {
+    if (!phase3 && whiteStepsDone >= 9 && whiteOnBoard === 3) {
         checkPhase3();
         phase3 = true;
         console.log("Showing phase3 message for white");
