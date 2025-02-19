@@ -1202,14 +1202,15 @@ function handleStart(e) {
         );
 
         if (clickedPiece) {
-            draggedPiece = { ...clickedPiece };
+            originalPiece = { ...clickedPiece };
+            draggedPiece = clickedPiece;
             mouseOffset = { x: mouseX - clickedPiece.x, y: mouseY - clickedPiece.y };
             startX = mouseX;
             startY = mouseY;
 
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
             console.log(`Dragging started on white piece, oldNode:`, oldNode);
-            console.log(`00 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+            console.log(`00 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
 
@@ -1259,13 +1260,13 @@ function handleMove(e) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
-        console.log(`01 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+        console.log(`01 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
         updateBoard();
     }
 }
 
 function handleEnd(e) {
-    console.log(`02 before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+    console.log(`02 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
     e.preventDefault();
     if (!isDragging || !draggedPiece) {
         return;
@@ -1300,9 +1301,9 @@ function handleEnd(e) {
             } else {
                 console.error("Invalid move: oldRow and oldCol do not match.");
                 messageInvalid(newRow, newCol);
-                draggedPiece.x = clickedPiece.x;
-                draggedPiece.y = clickedPiece.y;
-                console.log(`CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+                draggedPiece.x = originalPiece.x;
+                draggedPiece.y = originalPiece.y;
+                console.log(`CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
                 console.log(whiteArray);
                 updateBoard();
                 printMatrix(grid);
@@ -1311,10 +1312,10 @@ function handleEnd(e) {
         } else {
             console.error("Invalid move: moveKey does not exist in moveMap.");
             messageInvalid(newRow, newCol);
-            console.log(`before CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
-            draggedPiece.x = clickedPiece.x;
-            draggedPiece.y = clickedPiece.y;
-            console.log(`after CLICKED x=${clickedPiece.x}, y=${clickedPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+            console.log(`before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
+            draggedPiece.x = originalPiece.x;
+            draggedPiece.y = originalPiece.y;
+            console.log(`after CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
             console.log(whiteArray);
             updateBoard();
             printMatrix(grid);
