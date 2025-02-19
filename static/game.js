@@ -665,7 +665,7 @@ function aiMoveFree() {
 
 function restrictedMove(player) {
     possibleMoves = [];
-    moveMap = {};  // Will store multiple old spots for each destination
+    moveMap = {};
 
     const isPlayer = player === "black" ? isBlack : isWhite;
 
@@ -691,15 +691,11 @@ function restrictedMove(player) {
                         }
 
                         if (isEmpty(r, c)) {
-                            // Check if moveMap already contains the key
                             const key = `${r},${c}`;
                             if (!moveMap[key]) {
                                 moveMap[key] = [];  // Initialize if it's the first time
                             }
-                            // Add the old position to the list of old spots
                             moveMap[key].push({ oldRow: row, oldCol: col });
-
-                            // Add the new move to the possible moves list
                             possibleMoves.push({ newRow: r, newCol: c });
                         }
                     }
@@ -707,7 +703,6 @@ function restrictedMove(player) {
             }
         }
     }
-
     return possibleMoves;
 }
 
@@ -718,12 +713,15 @@ function aiRestrictedMove() {
     for (let threat of possibleThreats) {
         for (let move of possibleMoves) {
             if (move.newRow === threat.r && move.newCol === threat.c) {
-                if (moveMap[`${move.newRow},${move.newCol}`]) {
-                    const { oldRow, oldCol } = moveMap[`${move.newRow},${move.newCol}`];
+                const key = `${move.newRow},${move.newCol}`;
+                
+                if (moveMap[key] && moveMap[key].length > 0) {
+                    // Choose the first old position (or apply your own logic)
+                    const { oldRow, oldCol } = moveMap[key][0];  // or change index if you need a different selection
+
                     console.log(`Found a blocking move: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
                     movePlayer(oldRow, oldCol, move.newRow, move.newCol, "black");
                     return;
-
                 } else {
                     console.error("Move not found in moveMap", move.newRow, move.newCol);
                 }
@@ -743,8 +741,10 @@ function aiRestrictedMove() {
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
     const { newRow, newCol } = randomMove;
 
-    if (moveMap[`${newRow},${newCol}`]) {
-        const { oldRow, oldCol } = moveMap[`${newRow},${newCol}`];
+    const key = `${newRow},${newCol}`;
+    if (moveMap[key] && moveMap[key].length > 0) {
+        const { oldRow, oldCol } = moveMap[key][0];  // Or apply your own logic for choosing the old spot
+
         console.log(`AI made a RESTRICTED move from (${oldRow}, ${oldCol}) to (${newRow}, ${newCol})`);
         movePlayer(oldRow, oldCol, newRow, newCol, "black");
 
@@ -1233,15 +1233,20 @@ function handleStart(e) {
                 } else {
                     validMove = false;
 
-                    for (let move in moveMap) {
-                        const { oldRow, oldCol } = moveMap[move];
+                    // Loop through moveMap to validate the move
+                    for (let moveKey in moveMap) {
+                        const oldPositions = moveMap[moveKey]; // Array of old positions for each key
+                        for (let position of oldPositions) {
+                            const { oldRow, oldCol } = position;
 
-                        if (oldNode.row !== null && oldNode.col !== null) {
-                            if (oldNode.row === oldRow && oldNode.col === oldCol) {
-                                validMove = true;
-                                break;
+                            if (oldNode.row !== null && oldNode.col !== null) {
+                                if (oldNode.row === oldRow && oldNode.col === oldCol) {
+                                    validMove = true;
+                                    break; // Break inner loop if a valid old position is found
+                                }
                             }
                         }
+                        if (validMove) break; // Break outer loop if a valid move is found
                     }
 
                     if (!validMove) {
@@ -1302,12 +1307,20 @@ function handleEnd(e) {
         const moveKey = `${newRow},${newCol}`;
         console.log(`Checking moveKey: ${moveKey}`);
 
-        const move = moveMap[moveKey];
-        if (move) {
-            const { oldRow, oldCol } = move;
-            if (oldRow === oldNode.row && oldCol === oldNode.col) {
-                console.log("Valid move: Matching oldRow and oldCol.");
-            } else {
+        const oldPositions = moveMap[moveKey]; // Array of old positions for each destination
+        if (oldPositions) {
+            let validMove = false;
+            // Loop through all old positions and check for a match
+            for (let position of oldPositions) {
+                const { oldRow, oldCol } = position;
+                if (oldRow === oldNode.row && oldCol === oldNode.col) {
+                    validMove = true;
+                    console.log("Valid move: Matching oldRow and oldCol.");
+                    break; // Exit loop if a valid move is found
+                }
+            }
+
+            if (!validMove) {
                 console.error("Invalid move: oldRow and oldCol do not match.");
                 messageInvalid(newRow, newCol);
                 draggedPiece.x = originalPiece.x;
