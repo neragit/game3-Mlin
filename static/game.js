@@ -298,7 +298,7 @@ function checkNode(x, y) {
 
         return { row, col, x: nodeX - pieceSize / 2, y: nodeY - pieceSize / 2 };
     }
-    console.log("Invalid spot.")
+    //console.log("Invalid spot.")
     return null;
 }
 
@@ -1227,7 +1227,7 @@ function handleStart(e) {
             isDragging = true;
             
         } else {
-            console.log("Error: No white piece selected.");
+            //console.log("Error: No white piece selected.");
         }
     }
 }
