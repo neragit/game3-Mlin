@@ -1274,13 +1274,11 @@ function handleMove(e) {
         const { mouseX, mouseY } = getCoordinates(e);
         draggedPiece.x = mouseX - mouseOffset.x;
         draggedPiece.y = mouseY - mouseOffset.y;
-        console.log(`01 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
         updateBoard();
     }
 }
 
 function handleEnd(e) {
-    console.log(`02 before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
     e.preventDefault();
     if (!isDragging || !draggedPiece) {
         return;
