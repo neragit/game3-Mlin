@@ -430,9 +430,9 @@ function resetBoard() {
         whiteMap = initializeMap(whiteArray);
 
         updateScore();
-        updateBoard();
         updateGrid();
-        printMatrix(grid); 
+        updateBoard();
+        
     });
 }
 
@@ -818,10 +818,10 @@ function aiMove() {
     if (!nineStepsDone && blackStepsDone === 9) {
         nineStepsDone = true;
     }
-
-    updateBoard(); // after placing/moving black
+    
     updateMap("black");
     updateGrid();
+    updateBoard(); // after placing/moving black
     
     streak();
     updateMap("white");
@@ -1302,9 +1302,9 @@ function handleEnd(e) {
     draggedPiece.x = newNode.x;
     draggedPiece.y = newNode.y;
 
-    updateBoard(); // After placing/moving white
     updateMap("white");
     updateGrid();
+    updateBoard(); // After placing/moving white
     streak();
 
     whiteStepsDone++;
