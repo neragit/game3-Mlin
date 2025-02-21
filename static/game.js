@@ -57,7 +57,6 @@ let newNode = null;
 let startX = 0;
 let startY = 0;
 
-// Preload images for performance
 function preloadImages(imagesLoaded) {
     const whiteImg = new Image();
     const blackImg = new Image();
@@ -90,7 +89,6 @@ function drawGrid() {
     ctx.shadowOffsetY = 3;  
     ctx.shadowBlur = 5;
 
-    // Clear canvas before drawing grid and pieces
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // 3 squares
@@ -280,7 +278,7 @@ function isWithinBounds(r, c) {
     return !(r < 0 || r >= 7 || c < 0 || c >= 7);
 }
 
-// Calculate x, y based on grid(row, col)
+// Calculate x, y using grid(row, col)
 function calculateCoordinates(row, col) {
     const x = centerX - gridSize / 2 + col * gridStep - pieceSize / 2;
     const y = centerY - gridSize / 2 + row * gridStep - pieceSize / 2;
@@ -298,11 +296,10 @@ function checkNode(x, y) {
         const nodeX = centerX - gridSize / 2 + col * gridStep;
         const nodeY = centerY - gridSize / 2 + row * gridStep;
 
-        // console.log(`Calculated row: ${row}, col: ${col}, x: ${nodeX - pieceSize / 2}, y: ${nodeY - pieceSize / 2}`); //
         return { row, col, x: nodeX - pieceSize / 2, y: nodeY - pieceSize / 2 };
     }
-    return null; // Not a valid spot
     console.log("Invalid spot.")
+    return null;
 }
 
 function updateGrid() {
@@ -325,8 +322,6 @@ function updateGrid() {
     updateSpot(whiteArray, 1);
 }
 
-
-
 // runs at (re)start
 function initializePieces() {
 
@@ -342,7 +337,6 @@ function initializePieces() {
         whiteArray.push({ x: startXWhite + i * (pieceSize + pieceGap), y: startYWhite });
     }
 
-    // Black pieces above the grid
     const startXBlack = centerX - widthArray / 2;
     const startYBlack = centerY - gridSize / 2 - pieceSize - gridStep; // above the grid
 
@@ -529,7 +523,7 @@ function updateArray(x, y, player, oldRow = null, oldCol = null, draggedPiece = 
 function clearNode(row, col) {
     if (!(isEmpty(row, col) || isBlocked(row, col))) {
         grid[row][col] = 0;
-        console.log(`Cleared cell [${row}, ${col}]!`);
+        //console.log(`Cleared cell [${row}, ${col}]!`);
     } else {
         console.log(`Attempted to clear an already empty node at ${row}, col: ${col}.`);
     }
@@ -550,21 +544,18 @@ function movePlayer(oldRow, oldCol, newRow, newCol, player) {
         return { x, y };  // new coordinates
     } else {
         console.log("Can't move, cell is already occupied or out of bounds.");
-        return null;  // failed
+        return null;
     }
 }
 
 function messageInvalid(row, col) {
     const messageElement = document.getElementById('invalid-message');
-    
-    // Calculate position (e.g., use calculateCoordinates here)
     const { x, y } = calculateCoordinates(row, col);
   
-    // Set the position of the message
+    // position of the message
     messageElement.style.left = `${x}px`;
     messageElement.style.top = `${y}px`;
-  
-    // Show the message
+    
     messageElement.removeAttribute('hidden');
     
     setTimeout(() => {
@@ -609,7 +600,7 @@ function findThreat() {
 
                     if (sumNeighbours > 1 || sumNextDoor > 1) {
                         possibleThreats.push({ r: row, c: col });
-                        console.log(`Threat detected at (${row}, ${col})`);
+                        //console.log(`Threat detected at (${row}, ${col})`);
                     }
                 }
             }
@@ -617,7 +608,7 @@ function findThreat() {
     }
 
     if (possibleThreats.length === 0) {
-        console.log("No threats found.");
+        //console.log("No threats found.");
     }
 
     return possibleThreats.length > 0 ? possibleThreats : null; // Return all threats, or null if none
@@ -631,13 +622,12 @@ function aiMoveFree() {
         for (const move of possibleThreats) {
             if (isEmpty(move.r, move.c)) {
                 movePlayer(null, null, move.r, move.c, "black");
-                console.log(`AI blocked a threat at:`, move);
+                //console.log(`AI blocked a threat at:`, move);
                 return move;
             }
         }
     }
 
-    // If no threats were blocked, do a random move
     let randomMove = null;
     let tries = 0;
     while (tries < 100) {
@@ -647,7 +637,7 @@ function aiMoveFree() {
         if (isEmpty(r, c)) {
             randomMove = { r, c };
             movePlayer(null, null, randomMove.r, randomMove.c, "black");
-            console.log(`AI made a FREE random move to`, randomMove);
+            //console.log(`AI made a FREE random move to`, randomMove);
             break;
         }
         tries++;
@@ -708,7 +698,7 @@ function restrictedMove(player) {
 
 
 function aiRestrictedMove() {
-    console.log(`Making a RESTRICTED move!`);
+    //console.log(`Making a RESTRICTED move!`);
 
     for (let threat of possibleThreats) {
         for (let move of possibleMoves) {
@@ -716,10 +706,8 @@ function aiRestrictedMove() {
                 const key = `${move.newRow},${move.newCol}`;
                 
                 if (moveMap[key] && moveMap[key].length > 0) {
-                    // Choose the first old position (or apply your own logic)
-                    const { oldRow, oldCol } = moveMap[key][0];  // or change index if you need a different selection
-
-                    console.log(`Found a blocking move: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
+                    const { oldRow, oldCol } = moveMap[key][0];
+                    //console.log(`Found a blocking move: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
                     movePlayer(oldRow, oldCol, move.newRow, move.newCol, "black");
                     return;
                 } else {
@@ -729,23 +717,21 @@ function aiRestrictedMove() {
         }
     }
 
-    console.log('No threat-blocking move found. Choosing a random move.');
+    //console.log('No threat-blocking move found. Choosing a random move.');
     let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
 
     if (validMoves.length === 0) {
-        console.error("No valid restricted move found.");
         gameOver = "black";
         checkGameOver();
     }
 
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
     const { newRow, newCol } = randomMove;
-
     const key = `${newRow},${newCol}`;
     if (moveMap[key] && moveMap[key].length > 0) {
         const { oldRow, oldCol } = moveMap[key][0];  // Or apply your own logic for choosing the old spot
 
-        console.log(`AI made a RESTRICTED move from (${oldRow}, ${oldCol}) to (${newRow}, ${newCol})`);
+        //console.log(`AI made a RESTRICTED move from (${oldRow}, ${oldCol}) to (${newRow}, ${newCol})`);
         movePlayer(oldRow, oldCol, newRow, newCol, "black");
 
     } else {
@@ -770,14 +756,12 @@ function blackRandom() {
 function aiJumps() {
 
     if (possibleThreats && possibleThreats.length > 0) {
-        // Iterate through all threats and block them
         for (const move of possibleThreats) {
-            // Check if a move is available to block this threat
             if (isEmpty(move.r, move.c)) {
                 const { oldRow, oldCol } = blackRandom();
-                movePlayer(oldRow, oldCol, move.r, move.c, "black"); // Jump to block the threat
-                console.log(`AI JUMPED from (${oldRow}, ${oldCol}) and blocked threat at:`, move);
-                return move; // Return the move to confirm the blocking jump
+                movePlayer(oldRow, oldCol, move.r, move.c, "black");
+                //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) and blocked threat at:`, move);
+                return move;
             }
         }
     }
@@ -788,20 +772,19 @@ function aiJumps() {
     while (tries < 100) {
         const r = Math.floor(Math.random() * 7);
         const c = Math.floor(Math.random() * 7);
-        console.log(`Attempt #${tries + 1}: Trying position (${r}, ${c})`);
+        //console.log(`Attempt #${tries + 1}: Trying position (${r}, ${c})`);
 
         if (isEmpty(r, c)) {
             randomMove = { r, c };
             const { oldRow, oldCol } = blackRandom();
             movePlayer(oldRow, oldCol, randomMove.r, randomMove.c, "black");
-            console.log(`AI made a random JUMP from (${oldRow}, ${oldCol}) to`, randomMove);
+            //console.log(`AI made a random JUMP from (${oldRow}, ${oldCol}) to`, randomMove);
             break;
         }
         tries++;
     }
 
     if (!randomMove) {
-        console.log("No valid moves left for AI.");
         return null;
     }
 
@@ -812,26 +795,26 @@ function aiJumps() {
 
 function aiMove() {
     findThreat();
-
+    
     if (blackStepsDone > 9) {
         if (!phase3 && (blackOnBoard === 3 )) {
             phase3 = true;
             checkPhase3();
-            console.log("Showing phase3 message");
             }
+        
         if (blackOnBoard >= 4 && blackOnBoard <= 9) {
             restrictedMove("black");
             aiRestrictedMove();
+            
         } else if (blackOnBoard < 4) {
             aiJumps();
         }
+        
     } else {
         aiMoveFree();
     }
 
     blackStepsDone++;
-    //console.log("Steps done:", blackStepsDone, "Nine steps done:", nineStepsDone);
-
     if (!nineStepsDone && blackStepsDone === 9) {
         nineStepsDone = true;
     }
@@ -858,19 +841,19 @@ function toggleSandClock() {
 // Scores
 
 function addStreakToSet(streakSet, positions, isBlack) {
-    const positionsString = JSON.stringify(positions);  // Convert the positions array to a string
+    const positionsString = JSON.stringify(positions);
 
     if (!streakSet.has(positionsString)) {
         streakSet.add(positionsString);  // Add the stringified positions to the set if it's not already there
 
         if (isBlack) {
             blackScore++;
-            console.log(`blackScore++, new score: ${blackScore}`);
+            //console.log(`blackScore++, new score: ${blackScore}`);
             removePiece("black");
             messageScored("black");
         } else {
             whiteScore++;
-            console.log(`whiteScore++, new score: ${whiteScore}`);
+            //console.log(`whiteScore++, new score: ${whiteScore}`);
             removePiece("white");
             messageScored("white");
         }
@@ -881,47 +864,36 @@ function messageScored(player) {
     const messageElement = document.getElementById('scored-message');
     const textElement = document.getElementById('removed-text');
 
-    if (!messageElement || !textElement) {
-        console.error("Error: Missing required elements (scored-message or removed-text).");
-        return;
-    }
-
-    // Set the message text based on the player
     if (player === 'black') {
         textElement.textContent = 'Black scored! White piece was removed.';
     } else if (player === 'white') {
         textElement.textContent = 'White scored! Select a black piece to remove.';
     }
 
-    // Show the message by removing the hidden attribute
     messageElement.removeAttribute('hidden');
-
-    // Hide the message after 2 seconds
     setTimeout(() => {
         messageElement.setAttribute('hidden', '');
     }, 5000);  // 2 seconds delay
 }
 
-// Check if all positions in the streak are valid after a move
-function checkIfStreakIsValid(streakSet, player) {
+function isStreakStillValid(streakSet, player) {
     streakSet.forEach(streakString => {
-        const positions = JSON.parse(streakString);  // Parse the streak positions
+        const positions = JSON.parse(streakString);
         let valid = true;
         
         for (let [r, c] of positions) {
             if (player === "black") {
                 if (!isBlack(r, c)) {
-                    valid = false; // black streak not valid (piece was removed)
+                    valid = false;
                     break;
                 }
             } else if (player === "white") {
                 if (!isWhite(r, c)) { 
-                    valid = false; // white streak not valid (piece was removed)
+                    valid = false;
                     break;
                 }
             }
         }
-        // If the streak is no longer valid, remove it from the set
         if (!valid) {
             streakSet.delete(streakString);
         }
@@ -950,7 +922,6 @@ function checkingIfStreak(row, col, incrementStreaks) {
                 maxSteps++;
             }
 
-            // Check if the current position matches the black or white piece
             if (isBlack(row, col) && isBlack(r, c)) {
                 blackStreak++;
                 positions.push([r, c]);
@@ -982,7 +953,7 @@ function updateScore() {
     blackScoreElement.textContent = `Black: ${blackScore}`;
 }
 
-// Removing 1 piece
+// Removing 1 random white
 function whiteRandom() {
     // Retry until a valid result is found
     while (true) {
@@ -993,7 +964,7 @@ function whiteRandom() {
         if (spot) {
             const { row, col } = spot;
             whiteArray.splice(randomIndex, 1);  // Remove from array
-            console.log(`Random white removed from array!`);
+            //console.log(`Random white removed from array!`);
             return { x, y, oldRow: row, oldCol: col };
         } else {
             console.log(`Spot not chosen. Retrying...`);
@@ -1003,10 +974,10 @@ function whiteRandom() {
 
 function removePiece(player) {
     if (player === "black") {
-        console.log(`Black will remove 1 white piece...`);
-        const { oldRow, oldCol } = whiteRandom(); // removes one randomly
+        //console.log(`Black will remove 1 white piece...`);
+        const { oldRow, oldCol } = whiteRandom();
         if (oldRow !== undefined && oldCol !== undefined) {
-            clearNode(oldRow, oldCol); // Pass the correct values to clearNode
+            clearNode(oldRow, oldCol);
             removeFromArray(oldRow, oldCol, player);
         }
     } else if (player === "white") {
@@ -1016,7 +987,6 @@ function removePiece(player) {
 }
 
 function removeFromArray(oldRow, oldCol, player) {
-    console.log("Running helper: removing from array...");
     const oldCoordinates = calculateCoordinates(oldRow, oldCol);
     const oldX = oldCoordinates.x;
     const oldY = oldCoordinates.y;
@@ -1025,17 +995,17 @@ function removeFromArray(oldRow, oldCol, player) {
         const indexToRemove = blackArray.findIndex(piece => piece.x === oldX && piece.y === oldY);
         if (indexToRemove !== -1) {
             blackArray.splice(indexToRemove, 1);
-            console.log("indexToRemove:", indexToRemove);
+            //console.log("indexToRemove:", indexToRemove);
 
             replacementIndex--;
-            console.log("blackArray after removal:", blackArray);
-            console.log("replacementIndex updated to:", replacementIndex);
+            //console.log("blackArray after removal:", blackArray);
+            //console.log("replacementIndex updated to:", replacementIndex);
         }
     } else if (player === "white") {
         const indexToRemove = whiteArray.findIndex(piece => piece.x === oldRow && piece.y === oldCol);
         if (indexToRemove !== -1) {
             whiteArray.splice(indexToRemove, 1);
-            console.log("whiteArray after removal:", whiteArray);
+            //console.log("whiteArray after removal:", whiteArray);
         }
     }
 }
@@ -1056,12 +1026,12 @@ function streak() {
         }
     }
 
-    checkIfStreakIsValid(blackStreakSet, "black");
-    checkIfStreakIsValid(whiteStreakSet, "white");
+    isStreakStillValid(blackStreakSet, "black");
+    isStreakStillValid(whiteStreakSet, "white");
 
     // console.log(`blackStreaksCount: ${blackStreaksCount}, whiteStreaksCount: ${whiteStreaksCount}`);
-    console.log(`Black Streaks Set: `, blackStreakSet);
-    console.log(`White Streaks Set: `, whiteStreakSet);
+    //console.log(`Black Streaks Set: `, blackStreakSet);
+    //console.log(`White Streaks Set: `, whiteStreakSet);
 
     updateScore();
     updateBoard();
@@ -1180,7 +1150,7 @@ function getCoordinates(e) {
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
-    console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
+    //console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
 
     if (isSelecting) {
         clickedPiece = blackArray.find(piece =>
@@ -1192,11 +1162,9 @@ function handleStart(e) {
 
         if (clickedPiece) {
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
-            console.log(`Selected black piece, oldNode:`, oldNode);
             if (oldNode) {
                 const { row, col } = oldNode;
                 clearNode(row, col);
-                console.log("Removing from array...");
                 removeFromArray(row, col, "black");
                 isSelecting = false;
             }
@@ -1232,8 +1200,6 @@ function handleStart(e) {
                     
                 } else {
                     validMove = false;
-
-                    // Loop through moveMap to validate the move
                     for (let moveKey in moveMap) {
                         const oldPositions = moveMap[moveKey]; // Array of old positions for each key
                         for (let position of oldPositions) {
@@ -1242,7 +1208,7 @@ function handleStart(e) {
                             if (oldNode.row !== null && oldNode.col !== null) {
                                 if (oldNode.row === oldRow && oldNode.col === oldCol) {
                                     validMove = true;
-                                    break; // Break inner loop if a valid old position is found
+                                    break;
                                 }
                             }
                         }
@@ -1250,7 +1216,6 @@ function handleStart(e) {
                     }
 
                     if (!validMove) {
-                        console.error("Invalid move selected.");
                         messageInvalid(oldNode.row, oldNode.col);
                         return;
                     } else {
@@ -1265,7 +1230,6 @@ function handleStart(e) {
             console.log("Error: No white piece selected.");
         }
     }
-    console.log(`Piece Bounds: x=${clickedPiece ? clickedPiece.x : 'N/A'}, y=${clickedPiece ? clickedPiece.y : 'N/A'}, size=${pieceSize}, padding=${piecePadding}`);
 }
 
 function handleMove(e) {
@@ -1286,8 +1250,6 @@ function handleEnd(e) {
 
     isDragging = false;
     const { mouseX, mouseY } = getCoordinates(e);
-    console.log(`CHECKING COORDINATES of handleEnd at: mouseX=${mouseX}, mouseY=${mouseY}`);
-
     newNode = checkNode(mouseX, mouseY);
     if (!newNode) {
         return;
@@ -1299,44 +1261,31 @@ function handleEnd(e) {
         return;
     }
 
-    console.log(`handleEnd: Moving piece from oldNode to newNode:`, oldNode, newNode);
-
     if (whiteStepsDone >= 9 && whiteOnBoard >= 4) {
         const moveKey = `${newRow},${newCol}`;
-        console.log(`Checking moveKey: ${moveKey}`);
-
-        const oldPositions = moveMap[moveKey]; // Array of old positions for each destination
+        const oldPositions = moveMap[moveKey];
         if (oldPositions) {
             let validMove = false;
-            // Loop through all old positions and check for a match
             for (let position of oldPositions) {
                 const { oldRow, oldCol } = position;
                 if (oldRow === oldNode.row && oldCol === oldNode.col) {
                     validMove = true;
-                    console.log("Valid move: Matching oldRow and oldCol.");
-                    break; // Exit loop if a valid move is found
+                    break;
                 }
             }
 
             if (!validMove) {
-                console.error("Invalid move: oldRow and oldCol do not match.");
                 messageInvalid(newRow, newCol);
                 draggedPiece.x = originalPiece.x;
                 draggedPiece.y = originalPiece.y;
-                console.log(`CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
-                console.log(whiteArray);
                 updateBoard();
                 printMatrix(grid);
                 return;
             }
         } else {
-            console.error("Invalid move: moveKey does not exist in moveMap.");
             messageInvalid(newRow, newCol);
-            console.log(`before CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
             draggedPiece.x = originalPiece.x;
             draggedPiece.y = originalPiece.y;
-            console.log(`after CLICKED x=${originalPiece.x}, y=${originalPiece.y}, DRAGGED x=${draggedPiece.x}, y=${draggedPiece.y}`);
-            console.log(whiteArray);
             updateBoard();
             printMatrix(grid);
             return;
@@ -1353,22 +1302,17 @@ function handleEnd(e) {
     draggedPiece.x = newNode.x;
     draggedPiece.y = newNode.y;
 
-    console.log(`PLACED AT: x=${draggedPiece.x}, y=${draggedPiece.y}`);
-
     updateBoard(); // After placing/moving white
     updateMap("white");
     updateGrid();
     streak();
 
-    if (!phase3 && whiteStepsDone >= 9 && whiteOnBoard === 3) {
-        checkPhase3();
-        phase3 = true;
-        console.log("Showing phase3 message for white");
-    }
-
     whiteStepsDone++;
-    printMatrix(grid);
-
+    if (!phase3 && whiteStepsDone >= 9 && whiteOnBoard === 3) {
+        phase3 = true;
+        checkPhase3();
+    }
+    
     const waitingForSelection = setInterval(function() {
         if (!isSelecting) {
             checkPhase2();
@@ -1379,7 +1323,7 @@ function handleEnd(e) {
                 draggedPiece = null;
             }, 1000);
         } else {
-            console.log("AI is waiting for player selection to finish...");
+            console.log("Waiting for player selection to finish...");
         }
     }, 1000);
 }
