@@ -795,9 +795,6 @@ function aiJumps() {
 
 function aiMove() {
     findThreat();
-    console.log(`blackOnBoard`, blackOnBoard);
-    console.log(`blackStepsDone`, blackStepsDone);
-    console.log(`phase3`, phase3);
     
     if (blackStepsDone >= 9) {
         if (!phase3 && blackOnBoard === 3 ) {
@@ -1037,9 +1034,9 @@ function streak() {
     //console.log(`White Streaks Set: `, whiteStreakSet);
 
     updateScore();
+    updateGrid();
     updateBoard();
     addGlow(); 
-    updateGrid();
 }
 
 function addGlow() {
