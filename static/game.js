@@ -812,9 +812,6 @@ function aiJumps() {
 
 function aiMove() {
     findThreat();
-    if (!nineStepsDone && blackStepsDone === 9) {
-        nineStepsDone = true;
-    }
 
     if (blackStepsDone > 9) {
         if (!phase3 && (blackOnBoard === 3 )) {
@@ -834,6 +831,10 @@ function aiMove() {
 
     blackStepsDone++;
     //console.log("Steps done:", blackStepsDone, "Nine steps done:", nineStepsDone);
+
+    if (!nineStepsDone && blackStepsDone === 9) {
+        nineStepsDone = true;
+    }
 
     updateBoard(); // after placing/moving black
     updateMap("black");
@@ -1220,6 +1221,8 @@ function handleStart(e) {
             oldNode = checkNode(clickedPiece.x, clickedPiece.y);
 
             if (nineStepsDone && whiteOnBoard >= 4 && whiteOnBoard <= 9) {
+                console.log("nineStepsDone:", nineStepsDone);
+                console.log("whiteOnBoard:", whiteOnBoard);
                 restrictedMove("white");
                 console.log("White possible moves MAP:", moveMap);
 
