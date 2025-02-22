@@ -44,6 +44,7 @@ let whiteStepsDone = 0;
 let gameOver = null;
 
 let possibleThreats = [];
+let possibleOpportunities = [];
 let possibleMoves = [];
 let moveMap = {}; // possible restricted moves for black (1 step into an empty spot / from-to pairs)
 
@@ -392,8 +393,6 @@ function updateMap(player) {
 }
 
 function updateBoard() {
-    console.log("updateBoard...");
-    printMatrix(grid);
     
     whiteOnBoard = 0;
     blackOnBoard = 0;
@@ -567,8 +566,10 @@ function messageInvalid(row, col) {
 
 // AI strategy
 
-function findThreat() {
-    possibleThreats = [];
+function analyzeGrid(type) {
+    let possiblePositions = [];
+    const lookFor = type === 'black' ? isBlack : isWhite; // Choose the function based on the search type (black or white)
+    
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
             if (isEmpty(row, col)) {
@@ -591,7 +592,7 @@ function findThreat() {
                             maxSteps++;
                         }
 
-                        if (isWhite(r, c)) {
+                        if (lookFor(r, c)) {
                             sumNeighbours += 1;
 
                             if (maxSteps - step === 1) {
@@ -601,32 +602,36 @@ function findThreat() {
                     }
 
                     if (sumNeighbours > 1 || sumNextDoor > 1) {
-                        possibleThreats.push({ r: row, c: col });
-                        //console.log(`Threat detected at (${row}, ${col})`);
+                        possiblePositions.push({ r: row, c: col });
                     }
                 }
             }
         }
     }
 
-    if (possibleThreats.length === 0) {
-        //console.log("No threats found.");
-    }
-
-    return possibleThreats.length > 0 ? possibleThreats : null; // Return all threats, or null if none
+    return possiblePositions.length > 0 ? possiblePositions : null;
 }
+
+function findOpportunity() {
+    possibleOpportunities = analyzeGrid('black');
+    return possibleOpportunities;
+}
+
+function findThreat() {
+    possibleThreats = analyzeGrid('white');
+    return possibleThreats;
+}
+
 
 // Phase 1
 
 function aiMoveFree() {
-
-    if (possibleThreats && possibleThreats.length > 0) {
-        for (const move of possibleThreats) {
-            if (isEmpty(move.r, move.c)) {
-                movePlayer(null, null, move.r, move.c, "black");
-                //console.log(`AI blocked a threat at:`, move);
-                return move;
-            }
+    const allMoves = [...possibleOpportunities, ...possibleThreats];
+    for (const move of allMoves) {
+        if (isEmpty(move.r, move.c)) {
+            movePlayer(null, null, move.r, move.c, "black");
+            //console.log(`AI made a move at:`, move);
+            return move;
         }
     }
 
@@ -652,6 +657,7 @@ function aiMoveFree() {
 
     return randomMove;
 }
+
 
 // Phase 2
 
@@ -685,7 +691,7 @@ function restrictedMove(player) {
                         if (isEmpty(r, c)) {
                             const key = `${r},${c}`;
                             if (!moveMap[key]) {
-                                moveMap[key] = [];  // Initialize if it's the first time
+                                moveMap[key] = [];
                             }
                             moveMap[key].push({ oldRow: row, oldCol: col });
                             possibleMoves.push({ newRow: r, newCol: c });
@@ -698,18 +704,16 @@ function restrictedMove(player) {
     return possibleMoves;
 }
 
-
 function aiRestrictedMove() {
-    //console.log(`Making a RESTRICTED move!`);
-
-    for (let threat of possibleThreats) {
-        for (let move of possibleMoves) {
-            if (move.newRow === threat.r && move.newCol === threat.c) {
+    const allMoves = [...possibleOpportunities, ...possibleThreats];
+    for (let move of possibleMoves) {
+        for (let target of allMoves) {
+            if (move.newRow === target.r && move.newCol === target.c) {
                 const key = `${move.newRow},${move.newCol}`;
                 
                 if (moveMap[key] && moveMap[key].length > 0) {
                     const { oldRow, oldCol } = moveMap[key][0];
-                    //console.log(`Found a blocking move: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
+                    //console.log(`Found a move for: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
                     movePlayer(oldRow, oldCol, move.newRow, move.newCol, "black");
                     return;
                 } else {
@@ -719,7 +723,6 @@ function aiRestrictedMove() {
         }
     }
 
-    //console.log('No threat-blocking move found. Choosing a random move.');
     let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
 
     if (validMoves.length === 0) {
@@ -730,12 +733,11 @@ function aiRestrictedMove() {
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
     const { newRow, newCol } = randomMove;
     const key = `${newRow},${newCol}`;
+    
     if (moveMap[key] && moveMap[key].length > 0) {
-        const { oldRow, oldCol } = moveMap[key][0];  // Or apply your own logic for choosing the old spot
-
-        //console.log(`AI made a RESTRICTED move from (${oldRow}, ${oldCol}) to (${newRow}, ${newCol})`);
+        const { oldRow, oldCol } = moveMap[key][0];  // Apply logic for choosing the old spot
+        //console.log(`AI made a RESTRICTED random move from (${oldRow}, ${oldCol}) to (${newRow}, ${newCol})`);
         movePlayer(oldRow, oldCol, newRow, newCol, "black");
-
     } else {
         console.error("Move not found in moveMap", newRow, newCol);
     }
@@ -754,21 +756,17 @@ function blackRandom() {
     return null;  // If the spot is not valid, return null
 }
 
-
 function aiJumps() {
-
-    if (possibleThreats && possibleThreats.length > 0) {
-        for (const move of possibleThreats) {
-            if (isEmpty(move.r, move.c)) {
-                const { oldRow, oldCol } = blackRandom();
-                movePlayer(oldRow, oldCol, move.r, move.c, "black");
-                //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) and blocked threat at:`, move);
-                return move;
-            }
+    const allMoves = [...possibleOpportunities, ...possibleThreats];
+    for (let move of allMoves) {
+        if (isEmpty(move.r, move.c)) {
+            const { oldRow, oldCol } = blackRandom();
+            movePlayer(oldRow, oldCol, move.r, move.c, "black");
+            //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) to block at:`, move);
+            return move;
         }
     }
 
-    // If no threats were blocked, do a random jump
     let randomMove = null;
     let tries = 0;
     while (tries < 100) {
@@ -796,9 +794,8 @@ function aiJumps() {
 // Selects a strategy
 
 function aiMove() {
+    findOpportunity();
     findThreat();
-    console.log("AI START MOVE blackOnBoard:", blackOnBoard);
-    printMatrix(grid);
     
     if (blackStepsDone >= 9) {
         if (!phase3 && blackOnBoard === 3 ) {
@@ -826,7 +823,6 @@ function aiMove() {
     updateMap("black");
     updateGrid();
     updateBoard(); // after placing/moving black
-    console.log("AFTER UPDATE BOARD blackOnBoard:", blackOnBoard);
     
     streak();
     toggleSandClock();
