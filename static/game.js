@@ -626,15 +626,17 @@ function findThreat() {
 // Phase 1
 
 function aiMoveFree() {
-    const allMoves = [...possibleOpportunities, ...possibleThreats];
-    for (const move of allMoves) {
-        if (isEmpty(move.r, move.c)) {
-            movePlayer(null, null, move.r, move.c, "black");
-            //console.log(`AI made a move at:`, move);
-            return move;
+    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+        const allMoves = [...possibleOpportunities, ...possibleThreats];
+        for (const move of allMoves) {
+            if (isEmpty(move.r, move.c)) {
+                movePlayer(null, null, move.r, move.c, "black");
+                //console.log(`AI made a move at:`, move);
+                return move;
+            }
         }
     }
-
+    
     let randomMove = null;
     let tries = 0;
     while (tries < 100) {
@@ -705,29 +707,31 @@ function restrictedMove(player) {
 }
 
 function aiRestrictedMove() {
-    const allMoves = [...possibleOpportunities, ...possibleThreats];
-    for (let move of possibleMoves) {
-        for (let target of allMoves) {
-            if (move.newRow === target.r && move.newCol === target.c) {
-                const key = `${move.newRow},${move.newCol}`;
-                
-                if (moveMap[key] && moveMap[key].length > 0) {
-                    const { oldRow, oldCol } = moveMap[key][0];
-                    //console.log(`Found a move for: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
-                    movePlayer(oldRow, oldCol, move.newRow, move.newCol, "black");
-                    return;
-                } else {
-                    console.error("Move not found in moveMap", move.newRow, move.newCol);
+    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+        const allMoves = [...possibleOpportunities, ...possibleThreats];
+        for (let move of possibleMoves) {
+            for (let target of allMoves) {
+                if (move.newRow === target.r && move.newCol === target.c) {
+                    const key = `${move.newRow},${move.newCol}`;
+                    
+                    if (moveMap[key] && moveMap[key].length > 0) {
+                        const { oldRow, oldCol } = moveMap[key][0];
+                        //console.log(`Found a move for: (${oldRow}, ${oldCol}) -> (${move.newRow}, ${move.newCol})`);
+                        movePlayer(oldRow, oldCol, move.newRow, move.newCol, "black");
+                        return;
+                    } else {
+                        console.error("Move not found in moveMap", move.newRow, move.newCol);
+                    }
                 }
             }
         }
-    }
-
-    let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
-
-    if (validMoves.length === 0) {
-        gameOver = "black";
-        checkGameOver();
+    
+        let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
+    
+        if (validMoves.length === 0) {
+            gameOver = "black";
+            checkGameOver();
+        }
     }
 
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
@@ -757,13 +761,15 @@ function blackRandom() {
 }
 
 function aiJumps() {
-    const allMoves = [...possibleOpportunities, ...possibleThreats];
-    for (let move of allMoves) {
-        if (isEmpty(move.r, move.c)) {
-            const { oldRow, oldCol } = blackRandom();
-            movePlayer(oldRow, oldCol, move.r, move.c, "black");
-            //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) to block at:`, move);
-            return move;
+    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+        const allMoves = [...possibleOpportunities, ...possibleThreats];
+        for (let move of allMoves) {
+            if (isEmpty(move.r, move.c)) {
+                const { oldRow, oldCol } = blackRandom();
+                movePlayer(oldRow, oldCol, move.r, move.c, "black");
+                //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) to block at:`, move);
+                return move;
+            }
         }
     }
 
