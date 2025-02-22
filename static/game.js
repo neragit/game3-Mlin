@@ -392,6 +392,8 @@ function updateMap(player) {
 }
 
 function updateBoard() {
+    console.log("updateBoard...");
+    printMatrix(grid);
     
     whiteOnBoard = 0;
     blackOnBoard = 0;
@@ -999,14 +1001,14 @@ function removeFromArray(oldRow, oldCol, player) {
             //console.log("indexToRemove:", indexToRemove);
 
             replacementIndex--;
-            //console.log("blackArray after removal:", blackArray);
+            console.log("blackArray after removal:", blackArray);
             //console.log("replacementIndex updated to:", replacementIndex);
         }
     } else if (player === "white") {
         const indexToRemove = whiteArray.findIndex(piece => piece.x === oldRow && piece.y === oldCol);
         if (indexToRemove !== -1) {
             whiteArray.splice(indexToRemove, 1);
-            //console.log("whiteArray after removal:", whiteArray);
+            console.log("whiteArray after removal:", whiteArray);
         }
     }
 }
