@@ -626,7 +626,7 @@ function findThreat() {
 // Phase 1
 
 function aiMoveFree() {
-    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+    if ((possibleOpportunities && possibleOpportunities.length > 0) || (possibleThreats && possibleThreats.length > 0)) {
         const allMoves = [...possibleOpportunities, ...possibleThreats];
         for (const move of allMoves) {
             if (isEmpty(move.r, move.c)) {
@@ -707,7 +707,7 @@ function restrictedMove(player) {
 }
 
 function aiRestrictedMove() {
-    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+    if ((possibleOpportunities && possibleOpportunities.length > 0) || (possibleThreats && possibleThreats.length > 0)) {
         const allMoves = [...possibleOpportunities, ...possibleThreats];
         for (let move of possibleMoves) {
             for (let target of allMoves) {
@@ -761,7 +761,7 @@ function blackRandom() {
 }
 
 function aiJumps() {
-    if (possibleOpportunities.length > 0 || possibleThreats.length > 0) {
+    if ((possibleOpportunities && possibleOpportunities.length > 0) || (possibleThreats && possibleThreats.length > 0)) {
         const allMoves = [...possibleOpportunities, ...possibleThreats];
         for (let move of allMoves) {
             if (isEmpty(move.r, move.c)) {
