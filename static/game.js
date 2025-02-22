@@ -409,6 +409,7 @@ function updateBoard() {
         }
     }
     checkGameOver();
+    return;
 }
 
 function resetBoard() {
@@ -1085,11 +1086,13 @@ function addGlow() {
 
 function checkGameOver() {
     if (blackArray.length === 2 || gameOver === "black") {
-        displayGameOver("Congratulations! White wins!");
+        displayGameOver("Congratulations!\nWhite wins!");
+        return;
     }
 
     if (whiteArray.length === 2 || gameOver === "white") {
-        displayGameOver("Better luck next time! Black wins!");
+        displayGameOver("Better luck next time!\nBlack wins!");
+        return;
     }
 }
 
@@ -1158,7 +1161,6 @@ function getCoordinates(e) {
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
-    console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
 
     if (isSelecting) {
         clickedPiece = blackArray.find(piece =>
@@ -1207,6 +1209,7 @@ function handleStart(e) {
                 if (possibleMoves.length === 0) {
                     gameOver = "white";
                     checkGameOver();
+                    return;
                     
                 } else {
                     validMove = false;
