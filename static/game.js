@@ -764,11 +764,14 @@ function blackRandom() {
 function aiJumps() {
     if ((possibleOpportunities && possibleOpportunities.length > 0) || (possibleThreats && possibleThreats.length > 0)) {
         const allMoves = [...possibleOpportunities, ...possibleThreats];
+        const { oldRow, oldCol } = blackRandom();
+
         for (let move of allMoves) {
             if (isEmpty(move.r, move.c)) {
-                const { oldRow, oldCol } = blackRandom();
+                if (isAdjacent(oldRow, oldCol, move.r, move.c)) {
+                    continue;
+                }
                 movePlayer(oldRow, oldCol, move.r, move.c, "black");
-                //console.log(`AI JUMPED from (${oldRow}, ${oldCol}) to block at:`, move);
                 return move;
             }
         }
@@ -779,13 +782,11 @@ function aiJumps() {
     while (tries < 100) {
         const r = Math.floor(Math.random() * 7);
         const c = Math.floor(Math.random() * 7);
-        //console.log(`Attempt #${tries + 1}: Trying position (${r}, ${c})`);
 
         if (isEmpty(r, c)) {
             randomMove = { r, c };
             const { oldRow, oldCol } = blackRandom();
             movePlayer(oldRow, oldCol, randomMove.r, randomMove.c, "black");
-            //console.log(`AI made a random JUMP from (${oldRow}, ${oldCol}) to`, randomMove);
             break;
         }
         tries++;
@@ -797,6 +798,11 @@ function aiJumps() {
 
     return randomMove;
 }
+
+function isAdjacent(row1, col1, row2, col2) {
+    return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
+}
+
 
 // Selects a strategy
 
