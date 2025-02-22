@@ -731,7 +731,7 @@ function aiRestrictedMove() {
     if (validMoves.length === 0) {
         gameOver = "black";
         checkGameOver();
-        return();
+        return;
     }
 
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
