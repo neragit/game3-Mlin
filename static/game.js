@@ -602,7 +602,7 @@ function analyzeGrid(type) {
                         }
                     }
 
-                    if (sumNeighbours > 1) {
+                    if (sumNeighbours > 1 || sumNextDoor > 1) {
                         possiblePositions.push({ r: row, c: col });
                     }
                 }
