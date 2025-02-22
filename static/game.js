@@ -608,8 +608,7 @@ function analyzeGrid(type) {
             }
         }
     }
-
-    return possiblePositions.length > 0 ? possiblePositions : null;
+    return possiblePositions;
 }
 
 function findOpportunity() {
