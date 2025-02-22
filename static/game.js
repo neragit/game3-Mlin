@@ -769,6 +769,8 @@ function aiJumps() {
         for (let move of allMoves) {
             if (isEmpty(move.r, move.c)) {
                 if (isAdjacent(oldRow, oldCol, move.r, move.c)) {
+                    console.log(`Checking move from (${oldRow}, ${oldCol}) to (${move.r}, ${move.c})`);
+                    console.log(`Are positions adjacent? ${isAdjacent}`);
                     continue;
                 }
                 movePlayer(oldRow, oldCol, move.r, move.c, "black");
