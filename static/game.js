@@ -798,6 +798,7 @@ function aiJumps() {
 function aiMove() {
     findThreat();
     console.log("AI START MOVE blackOnBoard:", blackOnBoard);
+    printMatrix(grid);
     
     if (blackStepsDone >= 9) {
         if (!phase3 && blackOnBoard === 3 ) {
@@ -1172,6 +1173,8 @@ function handleStart(e) {
                 clearNode(row, col);
                 removeFromArray(row, col, "black");
                 isSelecting = false;
+                updateGrid();
+                updateBoard();
             }
         } else {
             console.log("Error: Must select a black piece.");
