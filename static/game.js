@@ -826,7 +826,6 @@ function aiMove() {
     console.log("AFTER UPDATE BOARD blackOnBoard:", blackOnBoard);
     
     streak();
-    updateMap("white");
     toggleSandClock();
 }
 
@@ -1036,6 +1035,8 @@ function streak() {
     //console.log(`White Streaks Set: `, whiteStreakSet);
 
     updateScore();
+    updateMap("black");
+    updateMap("white");
     updateGrid();
     updateBoard();
     addGlow(); 
