@@ -1150,7 +1150,7 @@ function getCoordinates(e) {
 function handleStart(e) {
     e.preventDefault();
     const { mouseX, mouseY } = getCoordinates(e);
-    //console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
+    console.log(`GETTING COORDINATES at handleStart: mouseX=${mouseX}, mouseY=${mouseY}, isSelecting=${isSelecting}`);
 
     if (isSelecting) {
         clickedPiece = blackArray.find(piece =>
@@ -1258,6 +1258,10 @@ function handleEnd(e) {
     const { row: newRow, col: newCol } = newNode;
     if (!isWithinBounds(newRow, newCol) || !isEmpty(newRow, newCol)) {
         messageInvalid(newRow, newCol);
+        draggedPiece.x = originalPiece.x;
+        draggedPiece.y = originalPiece.y;
+        updateBoard();
+        printMatrix(grid);
         return;
     }
 
