@@ -724,13 +724,14 @@ function aiRestrictedMove() {
                 }
             }
         }
+    }
     
-        let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
-    
-        if (validMoves.length === 0) {
-            gameOver = "black";
-            checkGameOver();
-        }
+    let validMoves = possibleMoves.filter(move => isEmpty(move.newRow, move.newCol));
+
+    if (validMoves.length === 0) {
+        gameOver = "black";
+        checkGameOver();
+        return();
     }
 
     let randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
