@@ -795,6 +795,7 @@ function aiJumps() {
 
 function aiMove() {
     findThreat();
+    console.log("AI START MOVE blackOnBoard:," blackOnBoard);
     
     if (blackStepsDone >= 9) {
         if (!phase3 && blackOnBoard === 3 ) {
@@ -822,6 +823,7 @@ function aiMove() {
     updateMap("black");
     updateGrid();
     updateBoard(); // after placing/moving black
+    console.log("AFTER UPDATE BOARD blackOnBoard:," blackOnBoard);
     
     streak();
     updateMap("white");
